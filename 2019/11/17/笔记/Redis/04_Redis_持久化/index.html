@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="tomxwd" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Redis的持久化总体介绍redis官网介绍持久化  RDB（Redis DataBase）官网介绍 RDB是什么 在指定的时间间隔内将内存中的数据集快照写入磁盘，也就是行话讲的Snapshot快照，它恢复时是将快照文件直接读到内存里。  Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。  整个过">
+<meta name="keywords" content="blog">
+<meta property="og:type" content="article">
+<meta property="og:title" content="笔记&#x2F;Redis&#x2F;04_Redis_持久化">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;04_Redis_%E6%8C%81%E4%B9%85%E5%8C%96&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="Redis的持久化总体介绍redis官网介绍持久化  RDB（Redis DataBase）官网介绍 RDB是什么 在指定的时间间隔内将内存中的数据集快照写入磁盘，也就是行话讲的Snapshot快照，它恢复时是将快照文件直接读到内存里。  Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。  整个过">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565170403133.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565170410581.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565171175400.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565228147991.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565229187194.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565229196374.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565231018357.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565232176680.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565232212601.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565232780364.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565232892654.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565233000091.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565233125599.png">
+<meta property="og:updated_time" content="2019-11-16T09:59:16.453Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565170403133.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.blog.tomxwd.com/2019/11/17/笔记/Redis/04_Redis_持久化/"/>
+
+
+
+
+
+  <title>笔记/Redis/04_Redis_持久化 | tomxwd.blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/11/17/%E7%AC%94%E8%AE%B0/Redis/04_Redis_%E6%8C%81%E4%B9%85%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">笔记/Redis/04_Redis_持久化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-17T11:21:17+08:00">
+                2019-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Redis的持久化"><a href="#Redis的持久化" class="headerlink" title="Redis的持久化"></a>Redis的持久化</h1><h2 id="总体介绍"><a href="#总体介绍" class="headerlink" title="总体介绍"></a>总体介绍</h2><p><a href="https://redis.io/topics/persistence" target="_blank" rel="noopener">redis官网介绍持久化</a></p>
+<p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565170403133.png" alt="1565170403133"></p>
+<h2 id="RDB（Redis-DataBase）"><a href="#RDB（Redis-DataBase）" class="headerlink" title="RDB（Redis DataBase）"></a>RDB（Redis DataBase）</h2><h3 id="官网介绍"><a href="#官网介绍" class="headerlink" title="官网介绍"></a>官网介绍</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565170410581.png" alt="1565170410581"></p>
+<h3 id="RDB是什么"><a href="#RDB是什么" class="headerlink" title="RDB是什么"></a>RDB是什么</h3><ul>
+<li><p>在<strong>指定的时间间隔内</strong>将内存中的数据集快照写入磁盘，也就是行话讲的Snapshot快照，它恢复时是将快照文件直接读到内存里。</p>
+</li>
+<li><p>Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。</p>
+</li>
+<li><p>整个过程中，主进程是不会进行任何IO操作的，这就确保了极高的性能。</p>
+</li>
+<li><p>如果需要进行大规模数据的恢复，且对于数据恢复的完整性不是非常敏感，那RDB方式要比AOF方式更加的高效。</p>
+</li>
+<li><p>RDB的缺点是最后一次持久化后的数据可能丢失。</p>
+</li>
+</ul>
+<h3 id="Fork"><a href="#Fork" class="headerlink" title="Fork"></a>Fork</h3><p>Fork的作用是复制一个与当前进程一样的进程。</p>
+<p>新进程的所有数据（变量、环境变量、程序计数器等）数值都与原进程一致，但是是一个全新的进程，并作为原进程的子进程。</p>
+<h3 id="RDB保存的是dump-rdb文件"><a href="#RDB保存的是dump-rdb文件" class="headerlink" title="RDB保存的是dump.rdb文件"></a>RDB保存的是dump.rdb文件</h3><h3 id="配置文件位置"><a href="#配置文件位置" class="headerlink" title="配置文件位置"></a>配置文件位置</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565171175400.png" alt="1565171175400"></p>
+<ul>
+<li>900秒（15分钟）有1个key改变就触发；</li>
+<li>300秒（5分钟）有10个key改变就触发；</li>
+<li>60秒（1分钟）有10000个key改变就触发；</li>
+<li>改为save””就不触发；</li>
+<li>FLUSHDB、FLUSHALL、SHUTDOWN操作，都会更新一次新的内容。</li>
+<li>可以手动save，输入save指令即可</li>
+</ul>
+<h3 id="如何触发RDB快照"><a href="#如何触发RDB快照" class="headerlink" title="如何触发RDB快照"></a>如何触发RDB快照</h3><h4 id="配置文件中默认的快照配置"><a href="#配置文件中默认的快照配置" class="headerlink" title="配置文件中默认的快照配置"></a>配置文件中默认的快照配置</h4><p>冷拷贝后重新使用，可以用cp dump.rdb dump_new.rdb</p>
+<h4 id="命令save或bgsave"><a href="#命令save或bgsave" class="headerlink" title="命令save或bgsave"></a>命令save或bgsave</h4><ul>
+<li>save：save时只管保存，其他不管，全部阻塞</li>
+<li>bgsave：Redis会在后台异步进行快照操作，快照同时还可以响应客户端请求，可以通过lastsave命令来获取最后一次成功执行快照的时间。</li>
+</ul>
+<h4 id="执行FLUSHALL命令，也会产生dump-rdb文件，但里面是空的，无意义"><a href="#执行FLUSHALL命令，也会产生dump-rdb文件，但里面是空的，无意义" class="headerlink" title="执行FLUSHALL命令，也会产生dump.rdb文件，但里面是空的，无意义"></a>执行FLUSHALL命令，也会产生dump.rdb文件，但里面是空的，无意义</h4><h3 id="如何恢复"><a href="#如何恢复" class="headerlink" title="如何恢复"></a>如何恢复</h3><p>将备份文件(dump.rdb)移动到redis启动目录并启动服务即可。</p>
+<p>config get dir 获取目录</p>
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ul>
+<li>适合大规模的数据恢复</li>
+<li>对数据完整性和一致性要求不高</li>
+</ul>
+<h3 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h3><ul>
+<li>在一定间隔时间做一次备份，所以如果redis意外down掉的话，就会丢失最后一次快照后的所有修改。</li>
+<li>Fork的时候，内存中的数据被克隆了一份，大致2倍的膨胀性需要考虑。</li>
+</ul>
+<h3 id="如何停止"><a href="#如何停止" class="headerlink" title="如何停止"></a>如何停止</h3><p>动态停止所有RDB保存规则的方法：redis-cli config set save “”</p>
+<h3 id="小总结"><a href="#小总结" class="headerlink" title="小总结"></a>小总结</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565228147991.png" alt="1565228147991"></p>
+<h2 id="AOF（Append-Only-Flie）"><a href="#AOF（Append-Only-Flie）" class="headerlink" title="AOF（Append Only Flie）"></a>AOF（Append Only Flie）</h2><h3 id="官网介绍-1"><a href="#官网介绍-1" class="headerlink" title="官网介绍"></a>官网介绍</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565229187194.png" alt="1565229187194"></p>
+<p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565229196374.png" alt="1565229196374"></p>
+<h3 id="AOF是什么"><a href="#AOF是什么" class="headerlink" title="AOF是什么"></a>AOF是什么</h3><p><strong>以日志的形式来记录每个写操作</strong>，将Redis执行过的所有写指令记录下来（读操作不记录），只许追加文件单不可以改写文件，redis启动之初会读取该文件重新构建数据，换言之，redis重启的话就根据日志文件的内容将写指令从前到后执行一次以完成数据的恢复工作。</p>
+<h3 id="AOF保存的是appendonly-aof文件"><a href="#AOF保存的是appendonly-aof文件" class="headerlink" title="AOF保存的是appendonly.aof文件"></a>AOF保存的是appendonly.aof文件</h3><h3 id="配置位置"><a href="#配置位置" class="headerlink" title="配置位置"></a>配置位置</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565231018357.png" alt="1565231018357"></p>
+<p>appendonly yes </p>
+<h3 id="AOF启动-修复-恢复"><a href="#AOF启动-修复-恢复" class="headerlink" title="AOF启动/修复/恢复"></a>AOF启动/修复/恢复</h3><ul>
+<li><p>正常恢复</p>
+<ul>
+<li><p>启动：修改默认的appendonly no，改为yes</p>
+</li>
+<li><p>将有数据的aof文件复制一份保存到对应目录（config get dir）</p>
+</li>
+<li><p>恢复：重启redis然后重新加载</p>
+</li>
+</ul>
+</li>
+<li><p>异常恢复</p>
+<ul>
+<li>启动：appendonly yes</li>
+<li>备份被写坏的AOF文件</li>
+<li>修复：<code>redis-check-aof --fix</code>进行修复（也有<code>redis-check-dump</code>）</li>
+<li>恢复：重启redis然后重新加载</li>
+</ul>
+</li>
+</ul>
+<h3 id="rewrite"><a href="#rewrite" class="headerlink" title="rewrite"></a>rewrite</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565232176680.png" alt="1565232176680"></p>
+<p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565232212601.png" alt="1565232212601"></p>
+<ul>
+<li>rewrite是什么<ul>
+<li>AOF采用文件追加方式，文件会越来越大，为了避免出现此种情况，新增了重写机制，当AOF文件的大小超过所设定的阈值时，redis就会启动AOF文件的内容压缩，只保留可以恢复数据的最小指令集，可以使用命令<code>bgrewriteaof</code>来手动重写。</li>
+</ul>
+</li>
+<li>重写原理<ul>
+<li>AOF文件持续增长而过大时，会fork出一条新进程来将文件重写（也是先写临时文件最后再rename），遍历新进程的内存中的数据，每条记录有一条的set语句。重写aof文件的操作，并没有读取旧的aof文件，而是将整个内存中的数据库内容用命令的方式重写了一个新的aof文件，这点和快照有点类似。</li>
+</ul>
+</li>
+<li>触发机制<ul>
+<li><strong>redis会记录上次重写时的aof大小，默认配置是当AOF文件大小是上次rewrite后大小的一倍，且文件大于64M时触发。</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a>优势</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565232780364.png" alt="1565232780364"></p>
+<ul>
+<li>每次修改同步：appendfsync always，同步持久化，每次发生数据变更都会被立即记录到磁盘，性能较差但数据完整性较好。</li>
+<li>每秒同步：appendfsync everysec，异步操作，每秒记录，如果一秒内宕机，有数据丢失。</li>
+<li>不同步：appendfsync no，从不同步。</li>
+</ul>
+<h3 id="劣势-1"><a href="#劣势-1" class="headerlink" title="劣势"></a>劣势</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565232892654.png" alt="1565232892654"></p>
+<ul>
+<li>相同数据集的数据而言aof文件要远大于rdb文件，且恢复速度慢于rdb</li>
+<li>aof运行效率要慢于rdb，每秒同步策略效率较好，不同步效率和rdb相同。</li>
+</ul>
+<h3 id="小总结-1"><a href="#小总结-1" class="headerlink" title="小总结"></a>小总结</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565233000091.png" alt="1565233000091"></p>
+<h2 id="总结（Which-One）"><a href="#总结（Which-One）" class="headerlink" title="总结（Which One）"></a>总结（Which One）</h2><ul>
+<li><p>官网建议：</p>
+<p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565233125599.png" alt="1565233125599"></p>
+</li>
+<li><p>RDB持久化方式能够在指定的时间间隔内对你的数据进行快照存储。</p>
+</li>
+<li><p>AOF持久化方式记录每次对服务器写的操作，当服务器重启的时候会重新执行这些命令来恢复原始的数据，AOF命令以redis协议追加保存每次写的操作到文件末尾，Redis还能对AOF文件进行后台重写，使得AOF文件的体积不至于过大。</p>
+</li>
+<li><p>只做缓存：如果你只希望你的数据在服务器运行的时候存在，你也可以不使用任何持久化方式。</p>
+</li>
+<li><p>同时开启两种持久化方式</p>
+<ul>
+<li>在这种情况下，<strong>当redis重启的时候回优先载入AOF文件来恢复原始数据</strong>，因为在通常情况下AOF文件保存的数据集要比RDB文件保存的数据集完整。</li>
+<li>RDB的数据不实时，同时使用两者时，服务器重启也只会找AOF文件。<strong>那要不要只使用AOF呢？作者建议不要</strong>，因为RDB更适合用于备份数据库（AOF在不断变化，不好备份），快速重启，而且不会有AOF可能存在的Bug，留着作为一个万一的手段。</li>
+</ul>
+</li>
+<li><p>性能建议</p>
+<ul>
+<li>因为RDB文件只用作后备用途，建议值在slave上持久化RDB文件，而且只要15分钟备份一次就够了，只保留save 900 1这条规则。</li>
+<li>如果开启了AOF，好处是在最恶劣的情况下也只是会丢失不超过两秒的数据，启动脚本较简单，只load自己的AOF文件就可以了。代价是带来了持续的IO，二是AOF rewrite的最后将rewrite过程中产生的新数据写到了新文件造成阻塞几乎是不可避免的。只要硬盘许可，应该尽量减少AOF rewrite的频率，AOF重写的基础大小默认值64M太小了，可以设置到5G以上。默认超过原大小100%大小时重写也可以改到适当的数值。</li>
+<li>如果不开启AOF，仅靠Master-Slave Replication实现高可用性也可以，能省掉一大笔IO也减少了rewrite时带来的系统波动。代价是如果master/slave同时挂掉，会丢失十几分钟的数据，启动脚本也要比较两个master/slave中的RDB文件，载入较新的那个，新浪微博就采用了这种架构。</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/17/%E7%AC%94%E8%AE%B0/Redis/05_Redis_%E4%BA%8B%E5%8A%A1/" rel="next" title="笔记/Redis/05_Redis_事务">
+                <i class="fa fa-chevron-left"></i> 笔记/Redis/05_Redis_事务
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/17/%E7%AC%94%E8%AE%B0/SpringBoot%E6%95%B4%E5%90%88/11_SpringBoot%E9%AB%98%E7%BA%A7_%E7%BC%93%E5%AD%98_RedisTemplate%E5%92%8C%E5%BA%8F%E5%88%97%E5%8C%96%E6%9C%BA%E5%88%B6/" rel="prev" title="笔记/SpringBoot整合/11_SpringBoot高级_缓存_RedisTemplate和序列化机制">
+                笔记/SpringBoot整合/11_SpringBoot高级_缓存_RedisTemplate和序列化机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="tomxwd" />
+            
+              <p class="site-author-name" itemprop="name">tomxwd</p>
+              <p class="site-description motion-element" itemprop="description">tomxwd</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">478</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/tomxwd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis的持久化"><span class="nav-number">1.</span> <span class="nav-text">Redis的持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#总体介绍"><span class="nav-number">1.1.</span> <span class="nav-text">总体介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB（Redis-DataBase）"><span class="nav-number">1.2.</span> <span class="nav-text">RDB（Redis DataBase）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#官网介绍"><span class="nav-number">1.2.1.</span> <span class="nav-text">官网介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB是什么"><span class="nav-number">1.2.2.</span> <span class="nav-text">RDB是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fork"><span class="nav-number">1.2.3.</span> <span class="nav-text">Fork</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB保存的是dump-rdb文件"><span class="nav-number">1.2.4.</span> <span class="nav-text">RDB保存的是dump.rdb文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件位置"><span class="nav-number">1.2.5.</span> <span class="nav-text">配置文件位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何触发RDB快照"><span class="nav-number">1.2.6.</span> <span class="nav-text">如何触发RDB快照</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置文件中默认的快照配置"><span class="nav-number">1.2.6.1.</span> <span class="nav-text">配置文件中默认的快照配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命令save或bgsave"><span class="nav-number">1.2.6.2.</span> <span class="nav-text">命令save或bgsave</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行FLUSHALL命令，也会产生dump-rdb文件，但里面是空的，无意义"><span class="nav-number">1.2.6.3.</span> <span class="nav-text">执行FLUSHALL命令，也会产生dump.rdb文件，但里面是空的，无意义</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何恢复"><span class="nav-number">1.2.7.</span> <span class="nav-text">如何恢复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优势"><span class="nav-number">1.2.8.</span> <span class="nav-text">优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#劣势"><span class="nav-number">1.2.9.</span> <span class="nav-text">劣势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何停止"><span class="nav-number">1.2.10.</span> <span class="nav-text">如何停止</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小总结"><span class="nav-number">1.2.11.</span> <span class="nav-text">小总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF（Append-Only-Flie）"><span class="nav-number">1.3.</span> <span class="nav-text">AOF（Append Only Flie）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#官网介绍-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">官网介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF是什么"><span class="nav-number">1.3.2.</span> <span class="nav-text">AOF是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF保存的是appendonly-aof文件"><span class="nav-number">1.3.3.</span> <span class="nav-text">AOF保存的是appendonly.aof文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置位置"><span class="nav-number">1.3.4.</span> <span class="nav-text">配置位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF启动-修复-恢复"><span class="nav-number">1.3.5.</span> <span class="nav-text">AOF启动/修复/恢复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rewrite"><span class="nav-number">1.3.6.</span> <span class="nav-text">rewrite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优势-1"><span class="nav-number">1.3.7.</span> <span class="nav-text">优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#劣势-1"><span class="nav-number">1.3.8.</span> <span class="nav-text">劣势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小总结-1"><span class="nav-number">1.3.9.</span> <span class="nav-text">小总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结（Which-One）"><span class="nav-number">1.4.</span> <span class="nav-text">总结（Which One）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

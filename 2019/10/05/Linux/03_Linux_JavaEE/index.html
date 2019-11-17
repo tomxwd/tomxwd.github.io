@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="03_Linux_JavaEE安装JDK 下载地址 需要账号密码，百度一下就有 下载-x64.tar.gz版本   传jdk到&#x2F;opt&#x2F;open&#x2F;download目录下  解压到&#x2F;opt&#x2F;open&#x2F;environment&#x2F;jdk&#x2F;目录下  注意，如果是解压到指定目录，要加上-C参数  tar -zxvf jdk-8u221-linux-x64.tar.gz -C &#x2F;opt&#x2F;open&#x2F;environ">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="03_Linux_JavaEE">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;05&#x2F;Linux&#x2F;03_Linux_JavaEE&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="03_Linux_JavaEE安装JDK 下载地址 需要账号密码，百度一下就有 下载-x64.tar.gz版本   传jdk到&#x2F;opt&#x2F;open&#x2F;download目录下  解压到&#x2F;opt&#x2F;open&#x2F;environment&#x2F;jdk&#x2F;目录下  注意，如果是解压到指定目录，要加上-C参数  tar -zxvf jdk-8u221-linux-x64.tar.gz -C &#x2F;opt&#x2F;open&#x2F;environ">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-16T09:59:16.349Z">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.blog.tomxwd.com/2019/10/05/Linux/03_Linux_JavaEE/"/>
+
+
+
+
+
+  <title>03_Linux_JavaEE | tomxwd.blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/10/05/Linux/03_Linux_JavaEE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">03_Linux_JavaEE</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-05T20:37:38+08:00">
+                2019-10-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="03-Linux-JavaEE"><a href="#03-Linux-JavaEE" class="headerlink" title="03_Linux_JavaEE"></a>03_Linux_JavaEE</h1><h2 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h2><blockquote>
+<p><a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">下载地址</a></p>
+<p>需要账号密码，百度一下就有</p>
+<p>下载-x64.tar.gz版本</p>
+</blockquote>
+<ol>
+<li><p>传jdk到/opt/open/download目录下</p>
+</li>
+<li><p>解压到/opt/open/environment/jdk/目录下</p>
+<ul>
+<li><p>注意，如果是解压到指定目录，要加上-C参数</p>
+</li>
+<li><p>tar -zxvf jdk-8u221-linux-x64.tar.gz -C /opt/open/environment/jdk/</p>
+</li>
+</ul>
+</li>
+<li><p>配置环境变量配置文件：vim /etc/profile</p>
+</li>
+<li><p>JAVA_HOME=/opt/open/environment/jdk/jdk1.8.0_221</p>
+</li>
+<li><p>PATH=/opt/open/environment/jdk/jdk1.8.0_221/bin:$PATH</p>
+</li>
+<li><p>export JAVA_HOME PATH</p>
+</li>
+<li><p>直接生效：source /etc/profile，如果不这样就注销用户再进入</p>
+</li>
+<li><p>测试是否可用，先用java -version，再编写一个HelloWorld编译后运行试试。</p>
+</li>
+</ol>
+<h2 id="安装tomcat"><a href="#安装tomcat" class="headerlink" title="安装tomcat"></a>安装tomcat</h2><blockquote>
+<p><a href="https://tomcat.apache.org/download-80.cgi" target="_blank" rel="noopener">tomcat8下载地址</a></p>
+</blockquote>
+<ol>
+<li><p>放到/opt/open/download目录下</p>
+</li>
+<li><p>解压到/opt/open/service/tomcat/目录下</p>
+<ul>
+<li>tar -zxvf apache-tomcat-8.5.46.tar.gz -C /opt/open/service/tomcat/</li>
+</ul>
+</li>
+<li><p>启动tomcat ./startup.sh</p>
+</li>
+<li><p>开放端口vim /etc/sysconfig/iptables</p>
+<ul>
+<li><p>复制22端口的形式，改成8080即可</p>
+</li>
+<li><p>-A INPUT -m state –state NEW -m tcp -p tcp –dport 8080 -j ACCEPT</p>
+</li>
+</ul>
+</li>
+<li><p>重启防火墙</p>
+<ul>
+<li>service iptables restart</li>
+</ul>
+</li>
+<li><p>测试windows是否可以访问到linux上的tomcat服务器</p>
+</li>
+</ol>
+<h2 id="安装eclipse"><a href="#安装eclipse" class="headerlink" title="安装eclipse"></a>安装eclipse</h2><ol>
+<li>放到/opt/download目录下</li>
+<li>解压到/opt/soft/eclipse目录下</li>
+<li>启动eclipse，配置jre和server</li>
+<li>编写HelloWorld程序并测试</li>
+<li>编写jsp页面并测试</li>
+</ol>
+<h2 id="安装mysql5-6-44"><a href="#安装mysql5-6-44" class="headerlink" title="安装mysql5.6.44"></a>安装mysql5.6.44</h2><blockquote>
+<p><a href="https://downloads.mysql.com/archives/community/" target="_blank" rel="noopener">mysql官方下载地址</a></p>
+<p><a href="https://blog.csdn.net/hwh1231/article/details/71426844" target="_blank" rel="noopener">网上步骤</a></p>
+<p>记得要下载<strong>Source Code</strong>版本的mysql，因为这里是源码安装</p>
+</blockquote>
+<ol>
+<li><p>先卸载：</p>
+<p>rpm -qa|grep mysql</p>
+<p>如果有查到，就直接删除：</p>
+<ul>
+<li>rpm -e mysql：普通删除</li>
+<li>rpm -e –nodeps mysql ：强制删除，如果上面的命令提示有依赖，可以用这个命令进行强制删除</li>
+</ul>
+</li>
+<li><p>安装编译代码需要的包</p>
+<ul>
+<li>yum -y install make gcc-c++ cmake bison-devel ncurses-devel</li>
+</ul>
+</li>
+<li><p>下载MySQL5.6.44</p>
+</li>
+<li><p>解压</p>
+<ul>
+<li>tar -zxvf mysql-5.6.44.tar.gz</li>
+</ul>
+</li>
+<li><p>进入到mysql-5.6目录</p>
+</li>
+<li><p>编译安装</p>
+<ul>
+<li><pre><code class="shell">cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/usr/local/mysql/data -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_MEMORY_STORAGE_ENGINE=1 -DWITH_READLINE=1 -DMYSQL_UNIX_ADDR=/var/lib/mysql/mysql.sock -DMYSQL_TCP_PORT=3306 -DENABLED_LOCAL_INFILE=1 -DWITH_PARTITION_STORAGE_ENHINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">  </span><br><span class="line">- ```shell</span><br><span class="line">  cmake . -DCMAKE_INSTALL_PREFIX=/data/mysql/installdir \</span><br><span class="line">  -DDEFAULT_CHARSET=utf8 \</span><br><span class="line">  -DDEFAULT_COLLATION=utf8_general_ci \</span><br><span class="line">  -DENABLED_LOCAL_INFILE=ON \</span><br><span class="line">  -DWITH_INNOBASE_STORAGE_ENGINE=1 \</span><br><span class="line"> -DWITH_FEDERATED_STORAGE_ENGINE=1 \</span><br><span class="line">  -DWITH_BLACKHOLE_STORAGE_ENGINE=1 \</span><br><span class="line">  -DWITHOUT_EXAMPLE_STORAGE_ENGINE=1 \</span><br><span class="line">  -DWITH_PARTITION_STORAGE_ENGINE=1 \</span><br><span class="line">  -DWITH_PERFSCHEMA_STORAGE_ENGINE=1 \</span><br><span class="line">  -DCOMPILATION_COMMENT=&apos;MySQL&apos; \</span><br><span class="line">  -DWITH_READLINE=ON \</span><br><span class="line">  -DWITH_BOOST=/data/mysql/src/mysql-5.7.18/boost \</span><br><span class="line">  -DSYSCONFDIR=/data/mysql/datadir/3306/data \</span><br><span class="line">  -DMYSQL_UNIX_ADDR=/data/mysql/datadir/3306/data/mysql.sock</span><br></pre></td></tr></table></figure></code></pre>
+</li>
+<li><p>make &amp;&amp; make install</p>
+</li>
+</ul>
+</li>
+<li><p>配置MySQL</p>
+<ul>
+<li>设置权限<ul>
+<li>查看是否有mysql用户和mysql组<ul>
+<li>cat /etc/passwd：查看用户列表</li>
+<li>cat /etc/group：查看用户组列表</li>
+</ul>
+</li>
+<li>无则创建：<ul>
+<li>groupadd mysql</li>
+<li>useradd -g mysql mysql</li>
+</ul>
+</li>
+<li>修改/usr/local/mysql权限<ul>
+<li>chown -R mysql:mysql /user/local/mysql（-R表示递归修改权限）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>初始化配置，进入安装路径（再执行下面的指令），执行初始化配置脚本，创建系统自带的数据库和表<ul>
+<li>cd /usr/local/mysql</li>
+<li>scripts/mysql_install_db –basedir=/usr/local/mysql –datadir=/usr/local/mysql/data –user=mysql</li>
+</ul>
+</li>
+<li><strong>注意：</strong><ul>
+<li><strong>在启动MySQL服务的时候，会按照一定次序搜查my.cnf配置文件，先在/etc目录下找，找不到就会搜索”$basedir/my.cnf”，这里就是/usr/local/mysql/my.cnf，这是最新版MySQL的配置文件的默认位置！</strong></li>
+<li><strong>在CentOS6.8版本操作系统的最小安装完成后，会在/etc目录下有个my.cnf，需要吧这个文件改名，如/etc/my.cnf.bak，否则该文件会干扰源码安装的MySQL正确配置，造成无法启动</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>启动MySQL</p>
+<ul>
+<li>添加服务，拷贝服务脚本到init.d目录，并设置为开机启动<ul>
+<li>cd到/usr/local/mysql路径下</li>
+<li>cp support-files/mysql.server /etc/init.d/mysql（复制服务到/etc/init.d/mysql目录）</li>
+<li>chkconfig mysql on（设置为开机启动）</li>
+<li>service mysql start（启动MySQL）<ul>
+<li>如果不能启动，查看日志，可能是因为/var/lib/mysql没有给mysql用户权限</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>修改root密码</p>
+<ul>
+<li>cd /usr/local/mysql/bin</li>
+<li>./mysql -uroot -p</li>
+<li>mysql &gt; SET PASSWORD = PASSWORD(‘root’);</li>
+</ul>
+</li>
+<li><p>可以把bin放到环境变量里头去（vim /etc/profile）</p>
+<ul>
+<li>PATH=/usr/local/mysql/bin:/…..:$PATH</li>
+<li>source /etc/profile</li>
+</ul>
+</li>
+<li><p>记得要开放防火墙：</p>
+<ul>
+<li>/etc/sysconfig/iptables</li>
+<li>service iptables restart</li>
+</ul>
+</li>
+<li><p>navicat远程连接可能失败</p>
+<ul>
+<li>可以进入命令行后，update user set host=’%’ where user = ‘root’;</li>
+<li>然后flush  privileges;</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/03/Linux/02_%E5%AE%9E%E6%93%8DLinux/" rel="next" title="02_实操Linux">
+                <i class="fa fa-chevron-left"></i> 02_实操Linux
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/06/Linux/04_Linux_Shell/" rel="prev" title="04_Linux_Shell">
+                04_Linux_Shell <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="tomxwd" />
+            
+              <p class="site-author-name" itemprop="name">tomxwd</p>
+              <p class="site-description motion-element" itemprop="description">tomxwd</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">478</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/tomxwd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#03-Linux-JavaEE"><span class="nav-number">1.</span> <span class="nav-text">03_Linux_JavaEE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装JDK"><span class="nav-number">1.1.</span> <span class="nav-text">安装JDK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装tomcat"><span class="nav-number">1.2.</span> <span class="nav-text">安装tomcat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装eclipse"><span class="nav-number">1.3.</span> <span class="nav-text">安装eclipse</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装mysql5-6-44"><span class="nav-number">1.4.</span> <span class="nav-text">安装mysql5.6.44</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

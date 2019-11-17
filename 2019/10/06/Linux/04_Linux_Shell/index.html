@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="04_Linux_Shell Linux运维工程师在进行服务器集群管理的时候，需要编写shell程序来进行服务器管理。 对于JavaEE和Python程序员来说，工作的需要，要求写一些shell脚本进行程序或服务器的维护，比如编写定时备份数据库的脚本。 对于大数据程序员来说，需要编写shell程序来管理集群。  Shell是什么Shell是一个命令行解释器，为用户提供了一个向Linux内核发送请求">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="04_Linux_Shell">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;06&#x2F;Linux&#x2F;04_Linux_Shell&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="04_Linux_Shell Linux运维工程师在进行服务器集群管理的时候，需要编写shell程序来进行服务器管理。 对于JavaEE和Python程序员来说，工作的需要，要求写一些shell脚本进行程序或服务器的维护，比如编写定时备份数据库的脚本。 对于大数据程序员来说，需要编写shell程序来管理集群。  Shell是什么Shell是一个命令行解释器，为用户提供了一个向Linux内核发送请求">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;06&#x2F;Linux&#x2F;04_Linux_Shell&#x2F;04_Linux_Shell&#x2F;1570327060979.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;06&#x2F;Linux&#x2F;04_Linux_Shell&#x2F;04_Linux_Shell&#x2F;1570352215653.png">
+<meta property="og:updated_time" content="2019-11-16T09:59:16.350Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;06&#x2F;Linux&#x2F;04_Linux_Shell&#x2F;04_Linux_Shell&#x2F;1570327060979.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.blog.tomxwd.com/2019/10/06/Linux/04_Linux_Shell/"/>
+
+
+
+
+
+  <title>04_Linux_Shell | tomxwd.blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/10/06/Linux/04_Linux_Shell/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">04_Linux_Shell</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-06T09:54:05+08:00">
+                2019-10-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="04-Linux-Shell"><a href="#04-Linux-Shell" class="headerlink" title="04_Linux_Shell"></a>04_Linux_Shell</h1><ol>
+<li>Linux运维工程师在进行服务器集群管理的时候，需要编写shell程序来进行服务器管理。</li>
+<li>对于JavaEE和Python程序员来说，工作的需要，要求写一些shell脚本进行程序或服务器的维护，比如编写定时备份数据库的脚本。</li>
+<li>对于大数据程序员来说，需要编写shell程序来管理集群。</li>
+</ol>
+<h2 id="Shell是什么"><a href="#Shell是什么" class="headerlink" title="Shell是什么"></a>Shell是什么</h2><p>Shell是一个命令行解释器，为用户提供了一个向Linux内核发送请求以便运行程序的界面系统级程序，用户可以用shell来启动、挂起、停止甚至是编写一些程序。</p>
+<p><img src="04_Linux_Shell/1570327060979.png" alt="1570327060979"></p>
+<h2 id="Shell脚本的执行方式"><a href="#Shell脚本的执行方式" class="headerlink" title="Shell脚本的执行方式"></a>Shell脚本的执行方式</h2><p>脚本格式要求：</p>
+<ul>
+<li>脚本以#!/bin/bash开头</li>
+<li>脚本需要有可执行权限</li>
+</ul>
+<p>脚本的常用执行方式：</p>
+<ol>
+<li>输入脚本的绝对路径或相对路径，需要执行权限 </li>
+<li>sh+脚本，不需要执行权限</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">echo "hello,world!"</span><br></pre></td></tr></table></figure>
+
+<h2 id="Shell的变量"><a href="#Shell的变量" class="headerlink" title="Shell的变量"></a>Shell的变量</h2><h3 id="shell变量的介绍"><a href="#shell变量的介绍" class="headerlink" title="shell变量的介绍"></a>shell变量的介绍</h3><ol>
+<li>Linux Shell中的变量分为，系统变量和用户自定义变量。</li>
+<li>系统变量：$HOME、$PWD、$SHELL、$USER等等，比如echo $HOME；</li>
+<li>显示当前shell中所有变量：set</li>
+</ol>
+<h3 id="shell变量的定义"><a href="#shell变量的定义" class="headerlink" title="shell变量的定义"></a>shell变量的定义</h3><p>基本语法：</p>
+<ol>
+<li>定义变量：变量=值</li>
+<li>撤销变量：unset 变量</li>
+<li>声明静态变量：readonly 变量，<strong>注意：不能unset</strong></li>
+</ol>
+<p>案例：</p>
+<ol>
+<li><p>定义变量A，撤销变量A</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A=100</span><br><span class="line">echo "A=$A"</span><br><span class="line">unset A</span><br><span class="line">echo "A=$A"</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>声明静态变量B=2，不能unset</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">readonly B=2</span><br><span class="line">echo "B=$B"</span><br><span class="line">unset B</span><br><span class="line">echo "B=$B"</span><br></pre></td></tr></table></figure>
+
+<p>会报错，不可以unset静态变量，但是可以继续执行。</p>
+</li>
+<li><p>可把变量提升为全局环境变量，供其他shell程序使用</p>
+</li>
+</ol>
+<p>定义变量的规则：</p>
+<ol>
+<li>变量名称可以由字母、数字和下划线组成，但是不能以数字开头。</li>
+<li>等号两侧不能有空格</li>
+<li>变量名称一般习惯为大写</li>
+</ol>
+<p>将命令的返回值赋给变量</p>
+<ol>
+<li>A=`ls -la`反引号（键盘左上角），运行里面的命令，并把结果返回给变量A</li>
+<li>A=$(ls -la)等价于反引号</li>
+</ol>
+<h3 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h3><p>基本语法：</p>
+<ol>
+<li>export 变量名=变量值：将shell变量输出为环境变量</li>
+<li>source 配置文件：让修改后的配置信息立即生效</li>
+<li>echo $变量名：查询环境变量的值</li>
+</ol>
+<p>案例：</p>
+<ol>
+<li>在/etc/profile文件中定义TOMCAT_HOME环境变量</li>
+<li>查看环境变量TOMCAT_HOME的值</li>
+<li>在另外一个shell程序中使用TOMCAT_HOME</li>
+</ol>
+<p>注意：在输出TOMCAT_HOME环境变量前，需要让其生效：source /etc/profile</p>
+<h3 id="位置参数变量"><a href="#位置参数变量" class="headerlink" title="位置参数变量"></a>位置参数变量</h3><p>当我们执行一个shell脚本的时候，如果希望得到命令行的参数信息，就可以用到位置参数变量</p>
+<p>比如：./myshell.sh 100 200，这个就是一个执行shell的命令行，可以在myshell脚本中获取到参数信息</p>
+<p>基本语法：</p>
+<ul>
+<li>$n：n为数字，$0表示命令本身，$1-$9表示第一个到第九个参数，十以上的参数需要用大括号包含，如${10}</li>
+<li>$*：这个变量代表命令行中所有的参数，<strong>$*把所有的参数看成一个整体</strong></li>
+<li>$@：这个变量代表命令行中所有的参数，<strong>$@把每个参数区分对待</strong></li>
+<li>$#：这个变量代表命令行中所有参数的个数</li>
+</ul>
+<p>案例：</p>
+<p>编写一个shell脚本positionParam.sh，在脚本中获取到命令行的各个参数信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">echo $0</span><br><span class="line">echo $1</span><br><span class="line">echo $2</span><br><span class="line">echo $*</span><br><span class="line">echo $@</span><br><span class="line">echo $#</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost shell]# ./positionParam.sh 100 200</span><br><span class="line">./positionParam.sh</span><br><span class="line">100</span><br><span class="line">200</span><br><span class="line">100 200</span><br><span class="line">100 200</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h3><p>就是shell设计者事先定义好的变量，可以直接在shell脚本中使用</p>
+<p>基本语法：</p>
+<ul>
+<li>$$：当前进程的进程号（PID）</li>
+<li>$!：后台运行的最后一个进程的进程号（PID）</li>
+<li>$?：最后一次执行的命令的返回状态，如果这个变量的值为0，证明上一个命令正确执行，如果这个变量的值部位0（具体是哪个数，由命令自己决定），则证明上一个命令执行不正确。</li>
+</ul>
+<p>案例：</p>
+<p>&amp;以后台的方式执行</p>
+<p>shell脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">echo "当前的进程号=$$"</span><br><span class="line">echo "后台运行myShell.sh"</span><br><span class="line">./myShell.sh &amp;</span><br><span class="line">echo "最后的进程号=$!"</span><br><span class="line">echo "执行的值是=$?"</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost shell]# ./parVar.sh </span><br><span class="line">当前的进程号=2661</span><br><span class="line">后台运行myShell.sh</span><br><span class="line">最后的进程号=2662</span><br><span class="line">执行的值是=0</span><br><span class="line">[root@localhost shell]# total 12 -rwxr--r--. 1 root root 223 Oct 5 19:58 myShell.sh -rwxr--r--. 1 root root 141 Oct 5 20:09 parVar.sh -rwxr--r--. 1 root root 60 Oct 5 20:00 positionParam.sh</span><br><span class="line"></span><br><span class="line">Sat Oct 5 20:10:52 PDT 2019</span><br><span class="line"></span><br><span class="line">date=Sat Oct  5 20:10:52 PDT 2019</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><p>基本语法：</p>
+<ol>
+<li>$((运算式))或$[运算式]</li>
+<li>expr m + n（<strong>注意expr运算符间要有空格</strong>）</li>
+<li>expr m - n</li>
+<li>expr *,/,%：乘除取余</li>
+</ol>
+<p>案例：</p>
+<ol>
+<li><p>算（2+3）*4的值</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">RESULT1=$(((2+3)*4))</span><br><span class="line">echo $RESULT1</span><br><span class="line"></span><br><span class="line">RESULT2=$[(2+3)*4]</span><br><span class="line">echo $RESULT2</span><br><span class="line"></span><br><span class="line">TEMP=`expr 2 + 3`</span><br><span class="line">RESULT3=`expr $TEMP \* 4`</span><br><span class="line">echo $RESULT3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>求两个参数的和</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SUM=$[$1+$2]</span><br><span class="line">echo $SUM</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><p>基本语法：</p>
+<p>[ condition ]（注意condition前后要有空格）</p>
+<p>如果非空就返回true，可以用$?验证（0为false，&gt;1为false）</p>
+<p>案例：</p>
+<p>[ tomxwd ]：true</p>
+<p>[]：false</p>
+<p>[ condition ]&amp;&amp;echo OK||echo notok</p>
+<p>两个整数比较：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>=</td>
+<td>字符串比较</td>
+</tr>
+<tr>
+<td>-lt</td>
+<td>小于</td>
+</tr>
+<tr>
+<td>-le</td>
+<td>小于等于</td>
+</tr>
+<tr>
+<td>-eq</td>
+<td>等于</td>
+</tr>
+<tr>
+<td>-gt</td>
+<td>大于</td>
+</tr>
+<tr>
+<td>-ge</td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td>ne</td>
+<td>不等于</td>
+</tr>
+</tbody></table>
+<p>按照文件权限进行判断</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-r</td>
+<td>有读的权限</td>
+</tr>
+<tr>
+<td>-w</td>
+<td>有写的权限</td>
+</tr>
+<tr>
+<td>x</td>
+<td>有执行的权限</td>
+</tr>
+</tbody></table>
+<p>按照文件类型进行判断</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-f</td>
+<td>文件存在并且是一个常规的文件</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>文件存在</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>文件存在并且是一个目录</td>
+</tr>
+</tbody></table>
+<p>案例：</p>
+<ul>
+<li><p>“ok”是否等于“ok“</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">if [ "ok"="ok" ]</span><br><span class="line">then </span><br><span class="line">	echo "equal"</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>23是否大于等于22</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if [ 23 -gt 22 ]</span><br><span class="line">then </span><br><span class="line">	echo "&gt;"</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>/root/install.log目录中的文件是否存在</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if [ -e /root/Desktop/shell/aaa.txt ]</span><br><span class="line">then </span><br><span class="line">	echo "存在"</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h2 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h2><h3 id="if判断"><a href="#if判断" class="headerlink" title="if判断"></a>if判断</h3><p>基本语法：</p>
+<p>if [ 条件判断式 ];then</p>
+<p>​    程序</p>
+<p>fi</p>
+<p>或者</p>
+<p>if [ 条件判断式 ]</p>
+<p>​    then</p>
+<p>​    程序</p>
+<p>​    elif [ 条件判断式 ]</p>
+<p>​    then</p>
+<p>​    程序</p>
+<p>fi</p>
+<p>注意事项：</p>
+<ol>
+<li>[ 条件判断式 ]，中括号和条件判断式之间必须有空格</li>
+<li>推荐第二种写法</li>
+</ol>
+<p>案例：</p>
+<p>写一个shell脚本，如果输入的参数大于等于60，就输出及格了，如果小于60则不及格。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">if [ $&#123;1&#125; -ge 60 ]</span><br><span class="line">then</span><br><span class="line">        echo "及格了"</span><br><span class="line">elif [ $&#123;1&#125; -lt 60 ]</span><br><span class="line">then</span><br><span class="line">        echo "不及格"</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="case语句"><a href="#case语句" class="headerlink" title="case语句"></a>case语句</h3><p>基本语法：</p>
+<p>case $变量名 in</p>
+<p>“值1”)</p>
+<p>如果变量的值等于值1，则执行程序1</p>
+<p>;;</p>
+<p>“值2”)</p>
+<p>如果变量的值等于值2，则执行程序2</p>
+<p>;;</p>
+<p>*）</p>
+<p>如果变量的值不等于任意一个，则执行以下</p>
+<p>;;</p>
+<p>esac</p>
+<p>实例：</p>
+<p>命令行参数是1的时候，输出”周一”，是2的时候，输出”周二”，其他输出”other”：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">case $1 in</span><br><span class="line">"1")</span><br><span class="line">echo "周一"</span><br><span class="line">;;</span><br><span class="line">"2")</span><br><span class="line">echo "周二"</span><br><span class="line">;;</span><br><span class="line">*)</span><br><span class="line">echo "other"</span><br><span class="line">;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h3><p>基本语法：</p>
+<ul>
+<li><p>第一种：</p>
+<p>for 变量 in 值1 值2 值3…</p>
+<p>do</p>
+<p>​    程序</p>
+<p>done</p>
+</li>
+<li><p>第二种：</p>
+<p>for(( 初始值;循环控制条件;变量变化 ))</p>
+<p>do</p>
+<p>​    程序</p>
+<p>done</p>
+</li>
+</ul>
+<p>实例：</p>
+<ul>
+<li><p>第一种：</p>
+<p>打印命令行输入的参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">for i in "$@"</span><br><span class="line">do</span><br><span class="line">	echo "the num is $i"</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二种：</p>
+<p>从1加到100的值输出显示，这里可以看出$*和$@的区别</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">SUM=0</span><br><span class="line">for((i=1;i&lt;=100;i++))</span><br><span class="line">do</span><br><span class="line">	SUM=$[ $SUM+$i ]	</span><br><span class="line">done</span><br><span class="line">echo $SUM</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h3 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h3><p>基本语法：</p>
+<p>while[ 条件判断式 ]</p>
+<p>do</p>
+<p>​    程序</p>
+<p>done</p>
+<p>案例：</p>
+<p>从命令行输入一个数n，计算1+…+n的值</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">i=1</span><br><span class="line">SUM=0</span><br><span class="line">while [ $i -le $&#123;1&#125; ]</span><br><span class="line">do</span><br><span class="line">	SUM=$[$SUM+$i]</span><br><span class="line">	i=$[$i+1]</span><br><span class="line">done</span><br><span class="line">echo "sum=$SUM"</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="read读取控制台输入"><a href="#read读取控制台输入" class="headerlink" title="read读取控制台输入"></a>read读取控制台输入</h2><p>基本语法：</p>
+<p>read（选项）（参数）</p>
+<p>选项：</p>
+<ul>
+<li>-p：指定读取值时的提示符</li>
+<li>-t：指定读取值时等待的时间（秒），如果没有在指定的时间内输入，就不等待了</li>
+</ul>
+<p>参数：</p>
+<p>变量：指定读取值的变量名</p>
+<p>案例：</p>
+<ol>
+<li>读取控制台输入一个num值</li>
+<li>读取控制台输入一个num值，在10秒内输入</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">read -p "请输入一个数字num1=" NUM1</span><br><span class="line">echo "你输入的值是 num1=$NUM1"</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">read -t 10 -p "请输入一个数字num2=" NUM2</span><br><span class="line">echo "你输入的值是 num2=$NUM2"</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>shell编程和其他编程语言一样，有系统函数，也可以自定义函数。</p>
+<p>系统函数：</p>
+<ul>
+<li><p>basename基本语法</p>
+<ul>
+<li><p>功能：返回完整路径最后/的部分，常用于获取文件名</p>
+<ul>
+<li>basename [pathname] [suffix]</li>
+<li>basename [string] [suffix]</li>
+<li>basename命令会删掉所有的前缀包括最后一个/字符，然后将字符串显示出来</li>
+</ul>
+</li>
+<li><p>选项：</p>
+<ul>
+<li>suffix为后缀，如果指定了suffix，basename会将pathname或string中的suffix去掉</li>
+</ul>
+</li>
+<li><p>案例：</p>
+<ul>
+<li><p>请返回/home/aaa/test.txt的test.txt部分</p>
+<p>直接在命令行就可以：basename /home/aaa/test.txt</p>
+<p>甚至后缀都不要：basename /home/aaa/test.txt .txt</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>dirname基本语法</p>
+<ul>
+<li><p>功能：返回完整路径最后/的前面部分，常用于返回路径部分</p>
+<ul>
+<li>dirname 文件绝对路径</li>
+<li>从给定的包含绝对路径的文件名中去除文件名（非目录的部分），然后返回剩下的路径（目录的部分）</li>
+</ul>
+</li>
+<li><p>案例：</p>
+<ul>
+<li><p>请返回/home/aaa/test.txt中的/home/aaa</p>
+<p>dirname /home/aaa/test.txt</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>自定义函数：</p>
+<ul>
+<li><p>基本语法</p>
+<p>[ function ] funname[()]</p>
+<p>{</p>
+<p>​    Action;</p>
+<p>​    [return int;]</p>
+<p>}</p>
+<p>调用直接写函数名：funname [值]</p>
+</li>
+<li><p>案例：</p>
+<ul>
+<li>计算输入的两个参数的和</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">function getSum()&#123;</span><br><span class="line">	SUM=$[$n1+$n2]</span><br><span class="line">	echo "和是=$SUM"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">read -p "请输入第一个数n1" n1</span><br><span class="line">read -p "请输入第二个数n2" n2</span><br><span class="line"></span><br><span class="line">getSum $n1 $n2</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h2 id="综合案例"><a href="#综合案例" class="headerlink" title="综合案例"></a>综合案例</h2><p>需求：</p>
+<ol>
+<li>每天凌晨2:10备份数据库tomxwdDB到/data/backup/db</li>
+<li>备份开始和备份结束能够给出相应的提示信息</li>
+<li>备份后的文件要求以备份时间为文件名，并打包成.tar.gz的形式，比如：2019-10-6_230201.tar.gz</li>
+<li>在备份的同时，检查是否有10天前备份的数据库文件，如果有就将其删除</li>
+</ol>
+<p>思路：</p>
+<p><img src="04_Linux_Shell/1570352215653.png" alt="1570352215653"></p>
+<p>shell脚本内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 完成数据库的定时备份</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 备份的路径</span></span><br><span class="line">BACKUP=/data/backup/db</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">当前的时间作为文件名</span></span><br><span class="line">DATETIME=$(date +%Y_%m_%d_%H%M%S)</span><br><span class="line"><span class="meta">#</span><span class="bash"> 可以输出变量调试</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">echo</span> <span class="variable">$DATETIME</span></span></span><br><span class="line"></span><br><span class="line">echo "============开始备份============"</span><br><span class="line">echo "============备份的路径是$BACKUP/$DATETIME.tar.gz"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 主机</span></span><br><span class="line">HOST=localhost</span><br><span class="line"><span class="meta">#</span><span class="bash"> 用户名</span></span><br><span class="line">DB_USER=root</span><br><span class="line"><span class="meta">#</span><span class="bash"> 密码</span></span><br><span class="line">DB_PWD=tomxwd</span><br><span class="line"><span class="meta">#</span><span class="bash"> 需要备份的数据库名</span></span><br><span class="line">DATABASE=tomxwdDB</span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建备份的路径</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果备份的目录不存在，则创建</span></span><br><span class="line">[ ! -d "$BACKUP/$DATETIME" ] &amp;&amp; mkdir -p "$BACKUP/$DATETIME"</span><br><span class="line"><span class="meta">#</span><span class="bash"> 执行mysql的备份数据库指令 这里是临时目录</span></span><br><span class="line">mysqldump -u$&#123;DB_USER&#125; -p$&#123;DB_PWD&#125; --host=$&#123;HOST&#125; $DATABASE | gzip &gt; $BACKUP/$DATETIME/$DATETIME.sql.gz</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 打包备份文件</span></span><br><span class="line">cd $BACKUP</span><br><span class="line">tar -zcvf $DATETIME.tar.gz $DATETIME</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除临时目录</span></span><br><span class="line">rm -rf $BACKUP/$DATETIME</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除十天前的备份文件</span></span><br><span class="line">find $BACKUP -mtime +10 -name "*.tar.gz" -exec rm -rf &#123;&#125; \;</span><br><span class="line"></span><br><span class="line">echo "=============备份文件成功============="</span><br></pre></td></tr></table></figure>
+
+<p>最后需要放到crond中：</p>
+<p>crontab -e</p>
+<p>内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10 2 * * * /usr/sbin/mysql_db_backup.sh</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/05/Linux/03_Linux_JavaEE/" rel="next" title="03_Linux_JavaEE">
+                <i class="fa fa-chevron-left"></i> 03_Linux_JavaEE
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/07/Hadoop/05_Hadoop_%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84/" rel="prev" title="05_Hadoop_目录结构">
+                05_Hadoop_目录结构 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="tomxwd" />
+            
+              <p class="site-author-name" itemprop="name">tomxwd</p>
+              <p class="site-description motion-element" itemprop="description">tomxwd</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">478</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/tomxwd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#04-Linux-Shell"><span class="nav-number">1.</span> <span class="nav-text">04_Linux_Shell</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Shell是什么"><span class="nav-number">1.1.</span> <span class="nav-text">Shell是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shell脚本的执行方式"><span class="nav-number">1.2.</span> <span class="nav-text">Shell脚本的执行方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shell的变量"><span class="nav-number">1.3.</span> <span class="nav-text">Shell的变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#shell变量的介绍"><span class="nav-number">1.3.1.</span> <span class="nav-text">shell变量的介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shell变量的定义"><span class="nav-number">1.3.2.</span> <span class="nav-text">shell变量的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置环境变量"><span class="nav-number">1.3.3.</span> <span class="nav-text">设置环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#位置参数变量"><span class="nav-number">1.3.4.</span> <span class="nav-text">位置参数变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预定义变量"><span class="nav-number">1.3.5.</span> <span class="nav-text">预定义变量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运算符"><span class="nav-number">1.4.</span> <span class="nav-text">运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#条件判断"><span class="nav-number">1.5.</span> <span class="nav-text">条件判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流程控制"><span class="nav-number">1.6.</span> <span class="nav-text">流程控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#if判断"><span class="nav-number">1.6.1.</span> <span class="nav-text">if判断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#case语句"><span class="nav-number">1.6.2.</span> <span class="nav-text">case语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#for循环"><span class="nav-number">1.6.3.</span> <span class="nav-text">for循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#while循环"><span class="nav-number">1.6.4.</span> <span class="nav-text">while循环</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#read读取控制台输入"><span class="nav-number">1.7.</span> <span class="nav-text">read读取控制台输入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">1.8.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#综合案例"><span class="nav-number">1.9.</span> <span class="nav-text">综合案例</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,Apache-beanutis," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="00_Apache-beanutis_注意事项避免使用Apache Beanutils进行属性copy 性能低下，Cglib BeanCopier效率最高。 pubilc修饰的类才能生效在进行测试的时候，由于处于方便，直接在下面建了一个class声明，结果进行属性copy的时候为null，把class用pubilc声明出去就可以了。 与Spring的copyProperties区别关于Apache">
+<meta name="keywords" content="Java,Apache-beanutis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="00_Apache-beanutis_注意事项">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;07&#x2F;29&#x2F;%E5%B7%A5%E5%85%B7%E7%B1%BB&#x2F;Apache-beanutils&#x2F;00_Apache-beanutis_%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="00_Apache-beanutis_注意事项避免使用Apache Beanutils进行属性copy 性能低下，Cglib BeanCopier效率最高。 pubilc修饰的类才能生效在进行测试的时候，由于处于方便，直接在下面建了一个class声明，结果进行属性copy的时候为null，把class用pubilc声明出去就可以了。 与Spring的copyProperties区别关于Apache">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;%E5%B7%A5%E5%85%B7%E7%B1%BB&#x2F;Apache-beanutils&#x2F;00%E9%81%BF%E5%85%8D%E4%BD%BF%E7%94%A8ApacheBeanutils%E8%BF%9B%E8%A1%8C%E5%B1%9E%E6%80%A7copy.png">
+<meta property="og:updated_time" content="2019-11-16T09:59:16.432Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;%E5%B7%A5%E5%85%B7%E7%B1%BB&#x2F;Apache-beanutils&#x2F;00%E9%81%BF%E5%85%8D%E4%BD%BF%E7%94%A8ApacheBeanutils%E8%BF%9B%E8%A1%8C%E5%B1%9E%E6%80%A7copy.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.blog.tomxwd.com/2019/07/29/工具类/Apache-beanutils/00_Apache-beanutis_注意事项/"/>
+
+
+
+
+
+  <title>00_Apache-beanutis_注意事项 | tomxwd.blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/07/29/%E5%B7%A5%E5%85%B7%E7%B1%BB/Apache-beanutils/00_Apache-beanutis_%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">00_Apache-beanutis_注意事项</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-29T09:49:19+08:00">
+                2019-07-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Apache-beanutis/" itemprop="url" rel="index">
+                    <span itemprop="name">Apache-beanutis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="00-Apache-beanutis-注意事项"><a href="#00-Apache-beanutis-注意事项" class="headerlink" title="00_Apache-beanutis_注意事项"></a>00_Apache-beanutis_注意事项</h1><h2 id="避免使用Apache-Beanutils进行属性copy"><a href="#避免使用Apache-Beanutils进行属性copy" class="headerlink" title="避免使用Apache Beanutils进行属性copy"></a>避免使用Apache Beanutils进行属性copy</h2><p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/%E5%B7%A5%E5%85%B7%E7%B1%BB/Apache-beanutils/00%E9%81%BF%E5%85%8D%E4%BD%BF%E7%94%A8ApacheBeanutils%E8%BF%9B%E8%A1%8C%E5%B1%9E%E6%80%A7copy.png" alt="避免使用ApacheBeanutils进行属性copy"></p>
+<p>性能低下，Cglib BeanCopier效率最高。</p>
+<h2 id="pubilc修饰的类才能生效"><a href="#pubilc修饰的类才能生效" class="headerlink" title="pubilc修饰的类才能生效"></a>pubilc修饰的类才能生效</h2><p>在进行测试的时候，由于处于方便，直接在下面建了一个class声明，结果进行属性copy的时候为null，把class用pubilc声明出去就可以了。</p>
+<h2 id="与Spring的copyProperties区别"><a href="#与Spring的copyProperties区别" class="headerlink" title="与Spring的copyProperties区别"></a>与Spring的copyProperties区别</h2><p>关于Apache的copyProperties(final Object dest, final Object orig)，前面的是等待接收属性的，后面的是提供属性的。而Spring的copyProperties虽然同名，但是顺序整好相反。</p>
+<h2 id="属性复制的时候Null会被初始化"><a href="#属性复制的时候Null会被初始化" class="headerlink" title="属性复制的时候Null会被初始化"></a>属性复制的时候Null会被初始化</h2><p>如果被复制的值为null，复制到目标对象的时候，会被初始化，<strong>比如：</strong></p>
+<ul>
+<li><strong>Integer，BigDecimal原本为null，会被初始化为0，如果是在搜索条件情况下，会造成影响。</strong></li>
+<li><strong>Date会报错</strong></li>
+<li>Boolean初始化为false</li>
+</ul>
+<p>解决办法(使用<strong>ConvertUtils.register</strong>)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ConvertUtils.register(<span class="keyword">new</span> DateConverter(<span class="keyword">null</span>), java.util.Date<span class="class">.<span class="keyword">class</span>)</span>;  </span><br><span class="line">ConvertUtils.register(<span class="keyword">new</span> BigDecimalConverter(<span class="keyword">null</span>), java.math.BigDecimal<span class="class">.<span class="keyword">class</span>)</span>;  </span><br><span class="line">ConvertUtils.register(<span class="keyword">new</span> IntegerConverter(<span class="keyword">null</span>), java.lang.Integer<span class="class">.<span class="keyword">class</span>)</span>;  </span><br><span class="line">ConvertUtils.register(<span class="keyword">new</span> BooleanConverter(<span class="keyword">null</span>), java.lang.Boolean<span class="class">.<span class="keyword">class</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这样，这些类就不会被初始化了。</p>
+<p>经过使用发现：</p>
+<ul>
+<li>使用1.9.3并不会初始化，但ConvertUtils也无法生效。</li>
+<li>使用1.8.3就会出现上述问题，但ConvertUtils可以生效。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/Apache-beanutis/" rel="tag"># Apache-beanutis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/29/%E5%B7%A5%E5%85%B7%E7%B1%BB/Apache-beanutils/01_Apache-beanutils_%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/" rel="next" title="01_Apache-beanutils_简单使用">
+                <i class="fa fa-chevron-left"></i> 01_Apache-beanutils_简单使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/29/%E5%B7%A5%E5%85%B7%E7%B1%BB/Apache-lang3/01_lang3_ArrayUtils%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C/" rel="prev" title="01_lang3_ArrayUtils数组操作">
+                01_lang3_ArrayUtils数组操作 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="tomxwd" />
+            
+              <p class="site-author-name" itemprop="name">tomxwd</p>
+              <p class="site-description motion-element" itemprop="description">tomxwd</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">478</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/tomxwd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#00-Apache-beanutis-注意事项"><span class="nav-number">1.</span> <span class="nav-text">00_Apache-beanutis_注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#避免使用Apache-Beanutils进行属性copy"><span class="nav-number">1.1.</span> <span class="nav-text">避免使用Apache Beanutils进行属性copy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pubilc修饰的类才能生效"><span class="nav-number">1.2.</span> <span class="nav-text">pubilc修饰的类才能生效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与Spring的copyProperties区别"><span class="nav-number">1.3.</span> <span class="nav-text">与Spring的copyProperties区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#属性复制的时候Null会被初始化"><span class="nav-number">1.4.</span> <span class="nav-text">属性复制的时候Null会被初始化</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

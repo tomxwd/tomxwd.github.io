@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,Apache-lang3," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="01_lang3_ArrayUtils数组操作1. add添加元素返回新集合12345678@Testpublic void testArrayUtils()&amp;#123;    int [] arr = new int[]&amp;#123;1,2&amp;#125;;    System.out.println(&quot;array = &quot; + Arrays.toString(arr));    &#x2F;&#x2F; 添加一个新元素并">
+<meta name="keywords" content="Java,Apache-lang3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="01_lang3_ArrayUtils数组操作">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;07&#x2F;29&#x2F;%E5%B7%A5%E5%85%B7%E7%B1%BB&#x2F;Apache-lang3&#x2F;01_lang3_ArrayUtils%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="01_lang3_ArrayUtils数组操作1. add添加元素返回新集合12345678@Testpublic void testArrayUtils()&amp;#123;    int [] arr = new int[]&amp;#123;1,2&amp;#125;;    System.out.println(&quot;array = &quot; + Arrays.toString(arr));    &#x2F;&#x2F; 添加一个新元素并">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-16T09:59:16.433Z">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.blog.tomxwd.com/2019/07/29/工具类/Apache-lang3/01_lang3_ArrayUtils数组操作/"/>
+
+
+
+
+
+  <title>01_lang3_ArrayUtils数组操作 | tomxwd.blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/07/29/%E5%B7%A5%E5%85%B7%E7%B1%BB/Apache-lang3/01_lang3_ArrayUtils%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">01_lang3_ArrayUtils数组操作</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-29T15:38:32+08:00">
+                2019-07-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Apache-lang3/" itemprop="url" rel="index">
+                    <span itemprop="name">Apache-lang3</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="01-lang3-ArrayUtils数组操作"><a href="#01-lang3-ArrayUtils数组操作" class="headerlink" title="01_lang3_ArrayUtils数组操作"></a>01_lang3_ArrayUtils数组操作</h1><h2 id="1-add添加元素返回新集合"><a href="#1-add添加元素返回新集合" class="headerlink" title="1. add添加元素返回新集合"></a>1. add添加元素返回新集合</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testArrayUtils</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> [] arr = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>&#125;;</span><br><span class="line">    System.out.println(<span class="string">"array = "</span> + Arrays.toString(arr));</span><br><span class="line">    <span class="comment">// 添加一个新元素并返回新集合</span></span><br><span class="line">    <span class="keyword">int</span>[] newArr = ArrayUtils.add(arr, <span class="number">3</span>);</span><br><span class="line">    System.out.println(<span class="string">"newArr = "</span> + Arrays.toString(newArr));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">array = [1, 2]</span><br><span class="line">newArr = [1, 2, 3]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-addAll合并数组或copy操作"><a href="#2-addAll合并数组或copy操作" class="headerlink" title="2. addAll合并数组或copy操作"></a>2. addAll合并数组或copy操作</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testArrayUtils</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 合并数组，可以是null，如果只有一个数组则为copy操作</span></span><br><span class="line">    <span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="comment">// copy操作</span></span><br><span class="line">    <span class="keyword">int</span>[] copyArr = ArrayUtils.addAll(arr);</span><br><span class="line">    <span class="comment">// 添加所有操作</span></span><br><span class="line">    <span class="keyword">int</span>[] allArr = ArrayUtils.addAll(arr, copyArr);</span><br><span class="line">    System.out.println(<span class="string">"arr = "</span> + Arrays.toString(arr));</span><br><span class="line">    System.out.println(<span class="string">"copyArr = "</span> + Arrays.toString(copyArr));</span><br><span class="line">    System.out.println(<span class="string">"allArr = "</span> + Arrays.toString(allArr));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arr = [1, 2]</span><br><span class="line">copyArr = [1, 2]</span><br><span class="line">allArr = [1, 2, 1, 2]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-clone克隆"><a href="#3-clone克隆" class="headerlink" title="3. clone克隆"></a>3. clone克隆</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testCloneArrayList</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span>[] clone = ArrayUtils.clone(arr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-contains"><a href="#4-contains" class="headerlink" title="4. contains"></a>4. contains</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testContains</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line">    System.out.println(<span class="string">"ArrayUtils.contains(arr,1) = "</span> + ArrayUtils.contains(arr, <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="5-hashCode"><a href="#5-hashCode" class="headerlink" title="5. hashCode"></a>5. hashCode</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testHashCode</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line">    System.out.println(<span class="string">"ArrayUtils.hashCode(arr) = "</span> + ArrayUtils.hashCode(arr));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="6-insert"><a href="#6-insert" class="headerlink" title="6. insert"></a>6. insert</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testInsert</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span>[] arr2= <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">    <span class="comment">// arr第二个位置开始插入数组arr2</span></span><br><span class="line">    <span class="keyword">int</span>[] insert = ArrayUtils.insert(<span class="number">1</span>, arr, arr2);</span><br><span class="line">    System.out.println(<span class="string">"arr = "</span> + Arrays.toString(arr));</span><br><span class="line">    System.out.println(<span class="string">"insert = "</span> + Arrays.toString(insert));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arr = [1, 2, 3]</span><br><span class="line">insert = [1, 4, 5, 6, 2, 3]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-判空"><a href="#7-判空" class="headerlink" title="7. 判空"></a>7. 判空</h2><p>null和{}，即null或size为0的，是空。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testEmpty</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// isEmpty &amp;&amp; isNotEmpty</span></span><br><span class="line">    <span class="keyword">int</span>[] arr1 = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">int</span>[] arr2 = &#123;&#125;;</span><br><span class="line">    System.out.println(<span class="string">"ArrayUtils.isEmpty(arr1) = "</span> + ArrayUtils.isEmpty(arr1));</span><br><span class="line">    System.out.println(<span class="string">"ArrayUtils.isEmpty(arr2) = "</span> + ArrayUtils.isEmpty(arr2));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="8-isSameLength判断长度是否一致"><a href="#8-isSameLength判断长度是否一致" class="headerlink" title="8. isSameLength判断长度是否一致"></a>8. isSameLength判断长度是否一致</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSameLength</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr1 = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span>[] arr2 = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">    System.out.println(<span class="string">"ArrayUtils.isSameLength(arr1,arr2) = "</span> + ArrayUtils.isSameLength(arr1, arr2));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="9-NullToEmpty"><a href="#9-NullToEmpty" class="headerlink" title="9. NullToEmpty"></a>9. NullToEmpty</h2><p>null转[]</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testNulltoEmpty</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// null转[]</span></span><br><span class="line">    <span class="keyword">int</span>[] arr = <span class="keyword">null</span>;</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(arr) = "</span> + Arrays.toString(arr));</span><br><span class="line">    <span class="keyword">int</span>[] newArr = ArrayUtils.nullToEmpty(arr);</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(arr) = "</span> + Arrays.toString(newArr));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Arrays.toString(arr) = null</span><br><span class="line">Arrays.toString(arr) = []</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="10-remove和removeAll删除并返回新数组"><a href="#10-remove和removeAll删除并返回新数组" class="headerlink" title="10. remove和removeAll删除并返回新数组"></a>10. remove和removeAll删除并返回新数组</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRemove</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(arr) = "</span> + Arrays.toString(arr));</span><br><span class="line">    <span class="keyword">int</span>[] remove = ArrayUtils.remove(arr, <span class="number">1</span>);</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(remove) = "</span> + Arrays.toString(remove));</span><br><span class="line">    <span class="keyword">int</span>[] removeAll = ArrayUtils.removeAll(arr, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(removeAll) = "</span> + Arrays.toString(removeAll));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Arrays.toString(arr) = [1, 2, 3, 4]</span><br><span class="line">Arrays.toString(remove) = [1, 3, 4]</span><br><span class="line">Arrays.toString(removeAll) = [1]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="11-reverse逆序"><a href="#11-reverse逆序" class="headerlink" title="11. reverse逆序"></a>11. reverse逆序</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReverse</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line">    ArrayUtils.reverse(arr);</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(arr) = "</span> + Arrays.toString(arr));</span><br><span class="line">    <span class="comment">// index从1开始到3之间，即第二个位置和第三个位置逆序 左闭右开[)</span></span><br><span class="line">    ArrayUtils.reverse(arr,<span class="number">1</span>,<span class="number">3</span>);</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(arr) = "</span> + Arrays.toString(arr));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Arrays.toString(arr) = [4, 3, 2, 1]</span><br><span class="line">Arrays.toString(arr) = [4, 2, 3, 1]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="12-shuffle乱序"><a href="#12-shuffle乱序" class="headerlink" title="12. shuffle乱序"></a>12. shuffle乱序</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testShuffle</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line">    ArrayUtils.shuffle(arr);</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(arr) = "</span> + Arrays.toString(arr));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Arrays.toString(arr) = [2, 3, 4, 5, 1]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="13-subarray截取数组"><a href="#13-subarray截取数组" class="headerlink" title="13. subarray截取数组"></a>13. subarray截取数组</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSubarray</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>&#125;;</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(arr) = "</span> + Arrays.toString(arr));</span><br><span class="line">    <span class="comment">// 截取数组 左闭右开 [)</span></span><br><span class="line">    <span class="keyword">int</span>[] subarray = ArrayUtils.subarray(arr, <span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(subarray) = "</span> + Arrays.toString(subarray));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Arrays.toString(arr) = [1, 2, 3, 4, 5, 6, 7]</span><br><span class="line">Arrays.toString(subarray) = [2, 3]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="14-swap指定位置交换数据"><a href="#14-swap指定位置交换数据" class="headerlink" title="14. swap指定位置交换数据"></a>14. swap指定位置交换数据</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSwap</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 指定位置交换数据 两边都是闭  [2,5]</span></span><br><span class="line">    <span class="keyword">int</span>[] arr = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>&#125;;</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(arr) = "</span> + Arrays.toString(arr));</span><br><span class="line">    ArrayUtils.swap(arr,<span class="number">2</span>,<span class="number">5</span>);</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(arr) = "</span> + Arrays.toString(arr));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Arrays.toString(arr) = [1, 2, 3, 4, 5, 6, 7, 8]</span><br><span class="line">Arrays.toString(arr) = [1, 2, 6, 4, 5, 3, 7, 8]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="15-toArray创建新数组"><a href="#15-toArray创建新数组" class="headerlink" title="15. toArray创建新数组"></a>15. toArray创建新数组</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testToArray</span><span class="params">()</span></span>&#123;</span><br><span class="line">    String[] arr = ArrayUtils.toArray(<span class="string">"大"</span>, <span class="string">"中"</span>, <span class="string">"小"</span>);</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(arr) = "</span> + Arrays.toString(arr));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="16-toPrimitive包装类转基本数据类型"><a href="#16-toPrimitive包装类转基本数据类型" class="headerlink" title="16. toPrimitive包装类转基本数据类型"></a>16. toPrimitive包装类转基本数据类型</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testToPrimitive</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Integer[] arr = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>&#125;;</span><br><span class="line">    <span class="comment">// 包装类转基本数据类型</span></span><br><span class="line">    <span class="keyword">int</span>[] intArr = ArrayUtils.toPrimitive(arr);</span><br><span class="line">    System.out.println(<span class="string">"Arrays.toString(intArr) = "</span> + Arrays.toString(intArr));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="17-toString"><a href="#17-toString" class="headerlink" title="17. toString"></a>17. toString</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testToString</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] arr = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">    String str = ArrayUtils.toString(arr);</span><br><span class="line">    System.out.println(str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/Apache-lang3/" rel="tag"># Apache-lang3</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/29/%E5%B7%A5%E5%85%B7%E7%B1%BB/Apache-beanutils/00_Apache-beanutis_%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" rel="next" title="00_Apache-beanutis_注意事项">
+                <i class="fa fa-chevron-left"></i> 00_Apache-beanutis_注意事项
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/29/%E5%B7%A5%E5%85%B7%E7%B1%BB/Apache-lang3/02_lang3_BooleanUtils/" rel="prev" title="02_lang3_BooleanUtils">
+                02_lang3_BooleanUtils <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="tomxwd" />
+            
+              <p class="site-author-name" itemprop="name">tomxwd</p>
+              <p class="site-description motion-element" itemprop="description">tomxwd</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">478</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/tomxwd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#01-lang3-ArrayUtils数组操作"><span class="nav-number">1.</span> <span class="nav-text">01_lang3_ArrayUtils数组操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-add添加元素返回新集合"><span class="nav-number">1.1.</span> <span class="nav-text">1. add添加元素返回新集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-addAll合并数组或copy操作"><span class="nav-number">1.2.</span> <span class="nav-text">2. addAll合并数组或copy操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-clone克隆"><span class="nav-number">1.3.</span> <span class="nav-text">3. clone克隆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-contains"><span class="nav-number">1.4.</span> <span class="nav-text">4. contains</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-hashCode"><span class="nav-number">1.5.</span> <span class="nav-text">5. hashCode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-insert"><span class="nav-number">1.6.</span> <span class="nav-text">6. insert</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-判空"><span class="nav-number">1.7.</span> <span class="nav-text">7. 判空</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-isSameLength判断长度是否一致"><span class="nav-number">1.8.</span> <span class="nav-text">8. isSameLength判断长度是否一致</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-NullToEmpty"><span class="nav-number">1.9.</span> <span class="nav-text">9. NullToEmpty</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-remove和removeAll删除并返回新数组"><span class="nav-number">1.10.</span> <span class="nav-text">10. remove和removeAll删除并返回新数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-reverse逆序"><span class="nav-number">1.11.</span> <span class="nav-text">11. reverse逆序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-shuffle乱序"><span class="nav-number">1.12.</span> <span class="nav-text">12. shuffle乱序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-subarray截取数组"><span class="nav-number">1.13.</span> <span class="nav-text">13. subarray截取数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-swap指定位置交换数据"><span class="nav-number">1.14.</span> <span class="nav-text">14. swap指定位置交换数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-toArray创建新数组"><span class="nav-number">1.15.</span> <span class="nav-text">15. toArray创建新数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16-toPrimitive包装类转基本数据类型"><span class="nav-number">1.16.</span> <span class="nav-text">16. toPrimitive包装类转基本数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#17-toString"><span class="nav-number">1.17.</span> <span class="nav-text">17. toString</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

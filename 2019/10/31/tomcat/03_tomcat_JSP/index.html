@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="tomcat," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="03_tomcat_JSPJava Server Page  JSP的本质是一个Servlet，Servlet能做的事情JSP都能做； JSP能够以HTML页面的方式呈现数据，是一个可以嵌入Java代码的HTML； JSP不同于HTML，不能使用浏览器直接打开，而必须运行在Servlet容器中；  JSP运行原理在tomcat的webapp的work目录下，存放着运行时编译的文件，可以在里面看到J">
+<meta name="keywords" content="tomcat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="03_tomcat_JSP">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;31&#x2F;tomcat&#x2F;03_tomcat_JSP&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="03_tomcat_JSPJava Server Page  JSP的本质是一个Servlet，Servlet能做的事情JSP都能做； JSP能够以HTML页面的方式呈现数据，是一个可以嵌入Java代码的HTML； JSP不同于HTML，不能使用浏览器直接打开，而必须运行在Servlet容器中；  JSP运行原理在tomcat的webapp的work目录下，存放着运行时编译的文件，可以在里面看到J">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;31&#x2F;tomcat&#x2F;03_tomcat_JSP&#x2F;03_tomcat_JSP&#x2F;1572527364542.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;31&#x2F;tomcat&#x2F;03_tomcat_JSP&#x2F;03_tomcat_JSP&#x2F;1572700279509.png">
+<meta property="og:updated_time" content="2019-11-16T09:59:16.422Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;31&#x2F;tomcat&#x2F;03_tomcat_JSP&#x2F;03_tomcat_JSP&#x2F;1572527364542.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.blog.tomxwd.com/2019/10/31/tomcat/03_tomcat_JSP/"/>
+
+
+
+
+
+  <title>03_tomcat_JSP | tomxwd.blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/10/31/tomcat/03_tomcat_JSP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">03_tomcat_JSP</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-31T20:38:26+08:00">
+                2019-10-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tomcat/" itemprop="url" rel="index">
+                    <span itemprop="name">tomcat</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="03-tomcat-JSP"><a href="#03-tomcat-JSP" class="headerlink" title="03_tomcat_JSP"></a>03_tomcat_JSP</h1><p>Java Server Page</p>
+<ol>
+<li>JSP的本质是一个Servlet，Servlet能做的事情JSP都能做；</li>
+<li>JSP能够以HTML页面的方式呈现数据，是一个可以嵌入Java代码的HTML；</li>
+<li>JSP不同于HTML，不能使用浏览器直接打开，而必须运行在Servlet容器中；</li>
+</ol>
+<h2 id="JSP运行原理"><a href="#JSP运行原理" class="headerlink" title="JSP运行原理"></a>JSP运行原理</h2><p>在tomcat的webapp的work目录下，存放着运行时编译的文件，可以在里面看到JSP对应的java文件以及编译完的class文件。</p>
+<p><strong>原理就是JSP是java文件；</strong></p>
+<p>可以打开JSP对应的java文件，看到里面继承了HttpJspBase类，而HttpJspBase继承自HttpServlet，因此JSP就是一个Servlet。</p>
+<p>而JSP是一个Servlet，那么是怎么加入到tomcat容器呢？可以到web.xml中看映射关系，其url-pattern是*.jsp，而其servlet-class是JspServlet，这个类处理所有.jsp结尾的请求。</p>
+<p><img src="03_tomcat_JSP/1572527364542.png" alt="1572527364542"></p>
+<h2 id="JSP基本语法"><a href="#JSP基本语法" class="headerlink" title="JSP基本语法"></a>JSP基本语法</h2><h3 id="JSP模板元素"><a href="#JSP模板元素" class="headerlink" title="JSP模板元素"></a>JSP模板元素</h3><p>JSP页面中的静态HTML内容称为JSP模板元素；</p>
+<h3 id="JSP表达式"><a href="#JSP表达式" class="headerlink" title="JSP表达式"></a>JSP表达式</h3><ul>
+<li>&lt;%= %&gt;</li>
+</ul>
+<p>JSP表达式（expression）提供了将一个Java变量或表达式的计算结果输出到客户端的简化方式，它将要输出的变量或表达式直接装在&lt;%=和%&gt;之中；</p>
+<p>例如：Current time:&lt;%=new java.util.Date()%&gt;，注意：不可以写分号(;)，因为被传参到out.print()中的，所以不能够写分号；</p>
+<h3 id="JSP脚本片段"><a href="#JSP脚本片段" class="headerlink" title="JSP脚本片段"></a>JSP脚本片段</h3><ul>
+<li>&lt;% %&gt;</li>
+</ul>
+<p>在脚本片段里可以写java代码；</p>
+<p>如：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">%</span></span></span><br><span class="line"><span class="tag">   <span class="attr">int</span> <span class="attr">age</span> = <span class="string">18;</span></span></span><br><span class="line"><span class="tag">   <span class="attr">if</span>(<span class="attr">age</span> &gt;</span>= 18)&#123;</span><br><span class="line">   		out.print("Xxx")</span><br><span class="line">   &#125;else&#123;</span><br><span class="line">    	out.print("Xxx")</span><br><span class="line">   &#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>脚本片段会被原封不动的复制到.java文件中去。</p>
+<p>JSP脚本片段还可以拆分出来写，但是必须要合法而且完整：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">%</span></span></span><br><span class="line"><span class="tag">   <span class="attr">int</span> <span class="attr">age</span> = <span class="string">18;</span></span></span><br><span class="line"><span class="tag">   <span class="attr">if</span>(<span class="attr">age</span> &gt;</span>= 18)&#123;</span><br><span class="line">%&gt;</span><br><span class="line">   <span class="tag">&lt;<span class="name">h1</span>&gt;</span></span><br><span class="line">       你好</span><br><span class="line">    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span></span></span><br><span class="line"><span class="tag">   &#125;<span class="attr">else</span>&#123;</span></span><br><span class="line"><span class="tag">    	<span class="attr">out.print</span>("<span class="attr">Xxx</span>")</span></span><br><span class="line"><span class="tag">   &#125;</span></span><br><span class="line"><span class="tag">%&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="JSP声明"><a href="#JSP声明" class="headerlink" title="JSP声明"></a>JSP声明</h3><ul>
+<li>&lt;%! %&gt;</li>
+</ul>
+<p>如可以声明变量、方法等，也就是在service()方法外部编写的内容；</p>
+<h3 id="JSP指令"><a href="#JSP指令" class="headerlink" title="JSP指令"></a>JSP指令</h3><ul>
+<li>&lt;%@ 指令名 属性名=”值” %&gt;</li>
+</ul>
+<p>例如：</p>
+<p><code>&lt;%@ page contentType=&quot;text/html;charset=gb2312&quot;%&gt;</code>：设置响应头信息</p>
+<p>属性名部分是大小写敏感的。</p>
+<p>JSP2.0中定义了三种指令：page、include、taglib；</p>
+<p>三种指令的属性：</p>
+<ul>
+<li>page（定义页面如何解析）：<ul>
+<li>import：用来在页面导包</li>
+<li>pageEncoding：指定页面使用的字符集，也是告诉JSP引擎使用指定的编码翻译</li>
+<li>contentType：设置响应头，页面如何响应给浏览器</li>
+<li>errorPage：指定发生错误去向的页面</li>
+<li>isErrorPage：表示当前页面是一个错误页面，可以使用exception对象信息，如：<ul>
+<li><code>&lt;%=exception.getMessage()%&gt;</code>获取错误信息</li>
+</ul>
+</li>
+<li>session：默认是true，当前页面是否参与会话，也就是是否可以使用session对象；</li>
+<li>isELIgnored：是否忽略EL表达式，默认是false（不忽略）；</li>
+<li>info：定义页面的信息（描述信息），在getServletInfo()里面return的信息；</li>
+</ul>
+</li>
+<li>include（静态包含）：<ul>
+<li><code>&lt;%@ include 属性名=&quot;属性值&quot;%&gt;</code>，可以把另一个页面包含进来，采用的方式是将整个页面复制到service方法里，这里不编译include的页面；</li>
+</ul>
+</li>
+<li>taglib：在页面引入标签库：<ul>
+<li>&lt;%@ taglib 属性名=属性值%&gt;</li>
+</ul>
+</li>
+</ul>
+<h3 id="JSP标签"><a href="#JSP标签" class="headerlink" title="JSP标签"></a>JSP标签</h3><p>JSP中内置了很多标签，每个标签都有不同的功能，就是执行一段代码；</p>
+<ul>
+<li><code>&lt;jsp:include&gt;</code>：也是在页面包含另外一个页面，<strong>动态包含</strong><ul>
+<li>page：页面路径</li>
+<li>把要包含的页面先翻译出来，再编译出来，再包含。</li>
+</ul>
+</li>
+<li><code>&lt;jsp:forward page=&quot;Xxx.jsp&quot;&gt;</code>：要转发的页面<ul>
+<li><code>&lt;jsp:param name=&quot;&quot; value=&quot;&quot;&gt;</code>：子标签，转发的时候带的参数；在请求中看不出来，而在后台实际上可以取得，因为是在父页面进行的请求，而设置参数的是在父页面jsp的servlet里，所以参数是在中途设置进去的。</li>
+</ul>
+</li>
+</ul>
+<h3 id="JSP九大隐含对象"><a href="#JSP九大隐含对象" class="headerlink" title="JSP九大隐含对象"></a>JSP九大隐含对象</h3><p>包括五个常规对象以及四个域对象；</p>
+<p>是我们在页面可以直接进行使用的对象。</p>
+<ul>
+<li>PageContext pageContext：代表当前页面对象</li>
+<li>HttpSession session：代表会话对象</li>
+<li>Throwable exception：代表当前页面捕获的异常对象</li>
+<li>ServletContext application：代表整个Web应用</li>
+<li>ServletConfig config：代表Servlet配置信息</li>
+<li>JspWriter out：代表可以在页面输出数据的out对象</li>
+<li>Object page = this：代表当前这个Servlet对象</li>
+<li>HttpServletRequest request：代表封装当次请求详细信息的对象</li>
+<li>HttpServletResponse response：代表当次响应的对象</li>
+</ul>
+<h4 id="五个常规对象"><a href="#五个常规对象" class="headerlink" title="五个常规对象"></a>五个常规对象</h4><ul>
+<li>exception</li>
+<li>config</li>
+<li>out</li>
+<li>page</li>
+<li>response</li>
+</ul>
+<p><img src="03_tomcat_JSP/1572700279509.png" alt="1572700279509"></p>
+<p>out.write()和response.getWriter().write()，如果out没有调用flush()方法，会导致response永远输出在out之前。</p>
+<p><strong>原理：</strong></p>
+<p>out会写入到JspWriter对象的缓冲区，response会写入到response的缓冲区，而JspWriter缓冲区的东西会塞到response缓冲区，所以显示的时候是response在前。</p>
+<p>所以如果要保证顺序，要在out调用完write之后再调用flush()方法。</p>
+<h4 id="四大域对象"><a href="#四大域对象" class="headerlink" title="四大域对象"></a>四大域对象</h4><p>域对象用来在其他资源共享数据</p>
+<ul>
+<li><p>pageContext</p>
+<ul>
+<li>getXxx方法可以获取所有其他的隐含对象</li>
+<li>作为域对象共享数据：只能在<strong>当前页面共享数据</strong>，离开页面就无法共享。</li>
+<li>通过setAttribute(key,value)共享内容；</li>
+<li>通过getAttribute(key)获取内容；</li>
+</ul>
+</li>
+<li><p>request</p>
+<ul>
+<li>在同一个请求对象中共享数据，只要是同一次请求，就可以共享数据（请求转发可以共享，而重定向不行）</li>
+</ul>
+</li>
+<li><p>session</p>
+<ul>
+<li>同一次会话共享数据，也就是打开浏览器——开始会话，关闭浏览器——结束会话</li>
+</ul>
+</li>
+<li><p>application</p>
+<ul>
+<li>代表当前应用，只要在同一个Web应用中都可以共享数据，Web应用只要不卸载，都可以访问到。</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>域对象</th>
+<th>作用范围</th>
+<th>起始时间</th>
+<th>结束时间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>pageContext</td>
+<td>当前JSP页面</td>
+<td>页面加载</td>
+<td>离开页面</td>
+</tr>
+<tr>
+<td>request</td>
+<td>同一个请求</td>
+<td>收到请求</td>
+<td>响应</td>
+</tr>
+<tr>
+<td>session</td>
+<td>同一个会话</td>
+<td>开始会话</td>
+<td>结束会话</td>
+</tr>
+<tr>
+<td>application</td>
+<td>当前Web应用</td>
+<td>Web应用加载</td>
+<td>Web应用卸载</td>
+</tr>
+</tbody></table>
+<h2 id="获取Base路径"><a href="#获取Base路径" class="headerlink" title="获取Base路径"></a>获取Base路径</h2><ul>
+<li><p>request.getScheme()：获取协议名(http)</p>
+</li>
+<li><p>request.getServerName()：获取服务器名</p>
+</li>
+<li><p>request.getServerPort()：获取服务器端口</p>
+</li>
+<li><p>request.getContentPath()：获取项目上下文路径</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tomcat/" rel="tag"># tomcat</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/27/tomcat/02_tomcat_Servlet/" rel="next" title="02_tomcat_Servlet">
+                <i class="fa fa-chevron-left"></i> 02_tomcat_Servlet
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/09/tomcat/04_tomcat_%E8%BF%9B%E9%98%B6%E6%94%B9%E9%80%A0/" rel="prev" title="04_tomcat_进阶改造">
+                04_tomcat_进阶改造 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="tomxwd" />
+            
+              <p class="site-author-name" itemprop="name">tomxwd</p>
+              <p class="site-description motion-element" itemprop="description">tomxwd</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">478</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/tomxwd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#03-tomcat-JSP"><span class="nav-number">1.</span> <span class="nav-text">03_tomcat_JSP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSP运行原理"><span class="nav-number">1.1.</span> <span class="nav-text">JSP运行原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSP基本语法"><span class="nav-number">1.2.</span> <span class="nav-text">JSP基本语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP模板元素"><span class="nav-number">1.2.1.</span> <span class="nav-text">JSP模板元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP表达式"><span class="nav-number">1.2.2.</span> <span class="nav-text">JSP表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP脚本片段"><span class="nav-number">1.2.3.</span> <span class="nav-text">JSP脚本片段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP声明"><span class="nav-number">1.2.4.</span> <span class="nav-text">JSP声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP指令"><span class="nav-number">1.2.5.</span> <span class="nav-text">JSP指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP标签"><span class="nav-number">1.2.6.</span> <span class="nav-text">JSP标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP九大隐含对象"><span class="nav-number">1.2.7.</span> <span class="nav-text">JSP九大隐含对象</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#五个常规对象"><span class="nav-number">1.2.7.1.</span> <span class="nav-text">五个常规对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四大域对象"><span class="nav-number">1.2.7.2.</span> <span class="nav-text">四大域对象</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取Base路径"><span class="nav-number">1.3.</span> <span class="nav-text">获取Base路径</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

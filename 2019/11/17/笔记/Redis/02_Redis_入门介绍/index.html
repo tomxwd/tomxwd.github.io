@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="tomxwd" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Redis_入门介绍入门概述是什么  能干嘛 去哪下 怎么玩 VMWare+VMTools Redis的安装 Windows版安装  重要提示：  Linux版安装  下载获得redis.tar.gz后将它放入我们的Linux目录&#x2F;opt  &#x2F;opt目录下，解压命令tar -zxvf redis-xxx.tar.gz  解压完成后出现文件夹：redis-xxx  进入目录：cd redis-xxx">
+<meta name="keywords" content="blog">
+<meta property="og:type" content="article">
+<meta property="og:title" content="笔记&#x2F;Redis&#x2F;02_Redis_入门介绍">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;02_Redis_%E5%85%A5%E9%97%A8%E4%BB%8B%E7%BB%8D&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="Redis_入门介绍入门概述是什么  能干嘛 去哪下 怎么玩 VMWare+VMTools Redis的安装 Windows版安装  重要提示：  Linux版安装  下载获得redis.tar.gz后将它放入我们的Linux目录&#x2F;opt  &#x2F;opt目录下，解压命令tar -zxvf redis-xxx.tar.gz  解压完成后出现文件夹：redis-xxx  进入目录：cd redis-xxx">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565073729977.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565073840192.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565073951254.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565075203455.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565075288767.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565075344342.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565075374726.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565075437423.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565075459616.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565075491113.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565075498986.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565075538365.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565081186698.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565081672553.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565081698926.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565083389837.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565083422479.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565084860458.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565084939279.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565085065394.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565085094353.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565085115555.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565161186035.png">
+<meta property="og:updated_time" content="2019-11-16T09:59:16.453Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;11&#x2F;17&#x2F;%E7%AC%94%E8%AE%B0&#x2F;Redis&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3&#x2F;1565073729977.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.blog.tomxwd.com/2019/11/17/笔记/Redis/02_Redis_入门介绍/"/>
+
+
+
+
+
+  <title>笔记/Redis/02_Redis_入门介绍 | tomxwd.blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/11/17/%E7%AC%94%E8%AE%B0/Redis/02_Redis_%E5%85%A5%E9%97%A8%E4%BB%8B%E7%BB%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">笔记/Redis/02_Redis_入门介绍</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-17T11:21:17+08:00">
+                2019-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Redis-入门介绍"><a href="#Redis-入门介绍" class="headerlink" title="Redis_入门介绍"></a>Redis_入门介绍</h1><h2 id="入门概述"><a href="#入门概述" class="headerlink" title="入门概述"></a>入门概述</h2><h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565073729977.png" alt="1565073729977"></p>
+<p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565073840192.png" alt="1565073840192"></p>
+<h3 id="能干嘛"><a href="#能干嘛" class="headerlink" title="能干嘛"></a>能干嘛</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565073951254.png" alt="1565073951254"></p>
+<h3 id="去哪下"><a href="#去哪下" class="headerlink" title="去哪下"></a>去哪下</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565075203455.png" alt="1565075203455"></p>
+<h3 id="怎么玩"><a href="#怎么玩" class="headerlink" title="怎么玩"></a>怎么玩</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565075288767.png" alt="1565075288767"></p>
+<h2 id="VMWare-VMTools"><a href="#VMWare-VMTools" class="headerlink" title="VMWare+VMTools"></a>VMWare+VMTools</h2><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565075344342.png" alt="1565075344342"></p>
+<h2 id="Redis的安装"><a href="#Redis的安装" class="headerlink" title="Redis的安装"></a>Redis的安装</h2><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565075374726.png" alt="1565075374726"></p>
+<h3 id="Windows版安装"><a href="#Windows版安装" class="headerlink" title="Windows版安装"></a>Windows版安装</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565075437423.png" alt="1565075437423"></p>
+<p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565075459616.png" alt="1565075459616"></p>
+<h3 id="重要提示："><a href="#重要提示：" class="headerlink" title="重要提示："></a>重要提示：</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565075491113.png" alt="1565075491113"></p>
+<p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565075498986.png" alt="1565075498986"></p>
+<h3 id="Linux版安装"><a href="#Linux版安装" class="headerlink" title="Linux版安装"></a>Linux版安装</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565075538365.png" alt="1565075538365"></p>
+<ol>
+<li><p>下载获得redis.tar.gz后将它放入我们的Linux目录/opt</p>
+</li>
+<li><p>/opt目录下，解压命令<code>tar -zxvf redis-xxx.tar.gz</code></p>
+</li>
+<li><p>解压完成后出现文件夹：redis-xxx</p>
+</li>
+<li><p>进入目录：<code>cd redis-xxx</code></p>
+</li>
+<li><p>在redis目录下执行make命令</p>
+<ul>
+<li><p>make报错，没有gcc</p>
+<p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565081186698.png" alt="1565081186698"></p>
+<p><strong>安装gcc：</strong></p>
+<p>能上网：yum install gcc-c++</p>
+<p>查看gcc版本：</p>
+<p>gcc -v</p>
+</li>
+<li><p>二次make，没有Jemalloc/jemalloc.h没有那个文件或目录</p>
+<p>运行make distclean之后再make</p>
+</li>
+<li><p>Redis Test(可以不用执行)</p>
+<p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565081672553.png" alt="1565081672553"></p>
+<p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565081698926.png" alt="1565081698926"></p>
+</li>
+</ul>
+</li>
+<li><p>如果make完成后继续执行make install</p>
+</li>
+<li><p>查看默认安装目录：usr/local/bin</p>
+</li>
+<li><p>启动</p>
+<ul>
+<li><p>在根目录创建myredis文件夹，放配置文件</p>
+<p><code>cp redis.conf /myredis</code></p>
+</li>
+<li><p>修改配置：</p>
+<ul>
+<li>deamonize yes    pid文件在/var/run/redis.pid。</li>
+<li><strong>protected-mode no</strong>否则外部无法连接上Redis。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>永远的helloworld</p>
+<p><code>redis-server /myredis/redis.conf</code></p>
+<p><code>redis-cli -p 6379</code></p>
+<p><code>shutdown 从客户端关闭redis</code></p>
+</li>
+<li><p>关闭</p>
+</li>
+</ol>
+<h3 id="Redis启动后杂项基础知识讲解"><a href="#Redis启动后杂项基础知识讲解" class="headerlink" title="Redis启动后杂项基础知识讲解"></a>Redis启动后杂项基础知识讲解</h3><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565083389837.png" alt="1565083389837"></p>
+<ol>
+<li><p>单进程；</p>
+<p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565083422479.png" alt="1565083422479"></p>
+</li>
+<li><p>select+角标命令切换数据库；</p>
+<p>默认16个库，<code>select 0</code>—-<code>select 15</code></p>
+</li>
+<li><p>Dbsize查看当前数据库key的数量；</p>
+</li>
+<li><p>Flushdb：清空当前库</p>
+</li>
+<li><p>Flushall：清空所有库</p>
+</li>
+<li><p>统一密码管理：16个库都是同样密码，要么都ok要么一个也连接不上</p>
+</li>
+<li><p>Redis索引都是从0开始</p>
+</li>
+<li><p>为什么默认是6379端口</p>
+<p>merz意大利歌手</p>
+</li>
+</ol>
+<h2 id="Redis数据类型"><a href="#Redis数据类型" class="headerlink" title="Redis数据类型"></a>Redis数据类型</h2><h3 id="Redis的五大数据类型"><a href="#Redis的五大数据类型" class="headerlink" title="Redis的五大数据类型"></a>Redis的五大数据类型</h3><h4 id="String（字符串）"><a href="#String（字符串）" class="headerlink" title="String（字符串）"></a>String（字符串）</h4><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565084860458.png" alt="1565084860458"></p>
+<h4 id="Hash（哈希，类似Java里的Map）"><a href="#Hash（哈希，类似Java里的Map）" class="headerlink" title="Hash（哈希，类似Java里的Map）"></a>Hash（哈希，类似Java里的Map）</h4><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565084939279.png" alt="1565084939279"></p>
+<h4 id="List（列表）"><a href="#List（列表）" class="headerlink" title="List（列表）"></a>List（列表）</h4><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565085065394.png" alt="1565085065394"></p>
+<h4 id="Set（集合）"><a href="#Set（集合）" class="headerlink" title="Set（集合）"></a>Set（集合）</h4><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565085094353.png" alt="1565085094353"></p>
+<h4 id="Zset（sorted-set：有序集合）"><a href="#Zset（sorted-set：有序集合）" class="headerlink" title="Zset（sorted set：有序集合）"></a>Zset（sorted set：有序集合）</h4><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565085115555.png" alt="1565085115555"></p>
+<h3 id="哪里去获得Redis常见数据类型操作命令"><a href="#哪里去获得Redis常见数据类型操作命令" class="headerlink" title="哪里去获得Redis常见数据类型操作命令"></a>哪里去获得Redis常见数据类型操作命令</h3><p><a href="http://redisdoc.com" target="_blank" rel="noopener">网站</a></p>
+<h3 id="Redis键-key"><a href="#Redis键-key" class="headerlink" title="Redis键(key)"></a>Redis键(key)</h3><h4 id="常用"><a href="#常用" class="headerlink" title="常用"></a>常用</h4><table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">命令及描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-del.html" target="_blank" rel="noopener">DEL key</a> 该命令用于在 key 存在时删除 key。</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-dump.html" target="_blank" rel="noopener">DUMP key</a>  序列化给定 key ，并返回被序列化的值。</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-exists.html" target="_blank" rel="noopener">EXISTS key</a>  检查给定 key 是否存在。</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-expire.html" target="_blank" rel="noopener">EXPIRE key</a> seconds 为给定 key 设置过期时间，以秒计。</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-expireat.html" target="_blank" rel="noopener">EXPIREAT key timestamp</a>  EXPIREAT 的作用和 EXPIRE 类似，都用于为 key 设置过期时间。 不同在于 EXPIREAT 命令接受的时间参数是 UNIX 时间戳(unix timestamp)。</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-pexpire.html" target="_blank" rel="noopener">PEXPIRE key milliseconds</a>  设置 key 的过期时间以毫秒计。</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-pexpireat.html" target="_blank" rel="noopener">PEXPIREAT key milliseconds-timestamp</a>  设置 key 过期时间的时间戳(unix timestamp) 以毫秒计</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-keys.html" target="_blank" rel="noopener">KEYS pattern</a>  查找所有符合给定模式( pattern)的 key 。</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-move.html" target="_blank" rel="noopener">MOVE key db</a>  将当前数据库的 key 移动到给定的数据库 db 当中。</td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-persist.html" target="_blank" rel="noopener">PERSIST key</a>  移除 key 的过期时间，key 将持久保持。</td>
+</tr>
+<tr>
+<td align="left">11</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-pttl.html" target="_blank" rel="noopener">PTTL key</a>  以毫秒为单位返回 key 的剩余的过期时间。</td>
+</tr>
+<tr>
+<td align="left">12</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-ttl.html" target="_blank" rel="noopener">TTL key</a>  以秒为单位，返回给定 key 的剩余生存时间(TTL, time to live)。</td>
+</tr>
+<tr>
+<td align="left">13</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-randomkey.html" target="_blank" rel="noopener">RANDOMKEY</a>  从当前数据库中随机返回一个 key 。</td>
+</tr>
+<tr>
+<td align="left">14</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-rename.html" target="_blank" rel="noopener">RENAME key newkey</a>  修改 key 的名称</td>
+</tr>
+<tr>
+<td align="left">15</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-renamenx.html" target="_blank" rel="noopener">RENAMENX key newkey</a>  仅当 newkey 不存在时，将 key 改名为 newkey 。</td>
+</tr>
+<tr>
+<td align="left">16</td>
+<td align="left"><a href="https://www.runoob.com/redis/keys-type.html" target="_blank" rel="noopener">TYPE key</a>  返回 key 所储存的值的类型。</td>
+</tr>
+</tbody></table>
+<h4 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h4><ul>
+<li>keys *</li>
+<li>exists key的名字，判断某个key 是否存在</li>
+<li>move key db —&gt; 移到其他库</li>
+<li>expire key 秒钟：为给定key设置过期时间</li>
+<li>ttl key：查看还有多少秒过期，-1表示不过期，-2表示已经过期</li>
+<li>type key：查看key的类型</li>
+</ul>
+<h3 id="Redis字符串-String"><a href="#Redis字符串-String" class="headerlink" title="Redis字符串(String)"></a>Redis字符串(String)</h3><p>单值单value</p>
+<h4 id="常用-1"><a href="#常用-1" class="headerlink" title="常用"></a>常用</h4><table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">命令及描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-set.html" target="_blank" rel="noopener">SET key value</a>  设置指定 key 的值</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-get.html" target="_blank" rel="noopener">GET key</a>  获取指定 key 的值。</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-getrange.html" target="_blank" rel="noopener">GETRANGE key start end</a>  返回 key 中字符串值的子字符</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-getset.html" target="_blank" rel="noopener">GETSET key value</a> 将给定 key 的值设为 value ，并返回 key 的旧值(old value)。</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-getbit.html" target="_blank" rel="noopener">GETBIT key offset</a> 对 key 所储存的字符串值，获取指定偏移量上的位(bit)。</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-mget.html" target="_blank" rel="noopener">MGET key1 [key2..]</a> 获取所有(一个或多个)给定 key 的值。</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-setbit.html" target="_blank" rel="noopener">SETBIT key offset value</a> 对 key 所储存的字符串值，设置或清除指定偏移量上的位(bit)。</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-setex.html" target="_blank" rel="noopener">SETEX key seconds value</a> 将值 value 关联到 key ，并将 key 的过期时间设为 seconds (以秒为单位)。</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-setnx.html" target="_blank" rel="noopener">SETNX key value</a> 只有在 key 不存在时设置 key 的值。</td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-setrange.html" target="_blank" rel="noopener">SETRANGE key offset value</a> 用 value 参数覆写给定 key 所储存的字符串值，从偏移量 offset 开始。</td>
+</tr>
+<tr>
+<td align="left">11</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-strlen.html" target="_blank" rel="noopener">STRLEN key</a> 返回 key 所储存的字符串值的长度。</td>
+</tr>
+<tr>
+<td align="left">12</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-mset.html" target="_blank" rel="noopener">MSET key value [key value …]</a> 同时设置一个或多个 key-value 对。</td>
+</tr>
+<tr>
+<td align="left">13</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-msetnx.html" target="_blank" rel="noopener">MSETNX key value [key value …]</a>  同时设置一个或多个 key-value 对，当且仅当所有给定 key 都不存在。</td>
+</tr>
+<tr>
+<td align="left">14</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-psetex.html" target="_blank" rel="noopener">PSETEX key milliseconds value</a> 这个命令和 SETEX 命令相似，但它以毫秒为单位设置 key 的生存时间，而不是像 SETEX 命令那样，以秒为单位。</td>
+</tr>
+<tr>
+<td align="left">15</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-incr.html" target="_blank" rel="noopener">INCR key</a> 将 key 中储存的数字值增一。</td>
+</tr>
+<tr>
+<td align="left">16</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-incrby.html" target="_blank" rel="noopener">INCRBY key increment</a> 将 key 所储存的值加上给定的增量值（increment） 。</td>
+</tr>
+<tr>
+<td align="left">17</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-incrbyfloat.html" target="_blank" rel="noopener">INCRBYFLOAT key increment</a> 将 key 所储存的值加上给定的浮点增量值（increment） 。</td>
+</tr>
+<tr>
+<td align="left">18</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-decr.html" target="_blank" rel="noopener">DECR key</a> 将 key 中储存的数字值减一。</td>
+</tr>
+<tr>
+<td align="left">19</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-decrby.html" target="_blank" rel="noopener">DECRBY key decrement</a> key 所储存的值减去给定的减量值（decrement） 。</td>
+</tr>
+<tr>
+<td align="left">20</td>
+<td align="left"><a href="https://www.runoob.com/redis/strings-append.html" target="_blank" rel="noopener">APPEND key value</a> 如果 key 已经存在并且是一个字符串， APPEND 命令将指定的 value 追加到该 key 原来值（value）的末尾。</td>
+</tr>
+</tbody></table>
+<h4 id="案例-1"><a href="#案例-1" class="headerlink" title="案例"></a>案例</h4><ul>
+<li>set/get/del/append/strlen</li>
+<li>Incr/decr/incrby/decrby：一定要是数字才可以加减</li>
+<li>gentrange（0到-1表示全部）/setrange</li>
+<li>setex(set with expire)键秒值/setnx(set if not exist)</li>
+<li>mset/mget/msetnx批量操作m是more的意思，msetnx所有成功才成功</li>
+<li>getset（先get再set）</li>
+</ul>
+<h3 id="Redis列表-List"><a href="#Redis列表-List" class="headerlink" title="Redis列表(List)"></a>Redis列表(List)</h3><p>单值多value</p>
+<h4 id="常用-2"><a href="#常用-2" class="headerlink" title="常用"></a>常用</h4><table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">命令及描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-blpop.html" target="_blank" rel="noopener">BLPOP key1 [key2 ] timeout</a>  移出并获取列表的第一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-brpop.html" target="_blank" rel="noopener">BRPOP key1 [key2 ] timeout</a>  移出并获取列表的最后一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-brpoplpush.html" target="_blank" rel="noopener">BRPOPLPUSH source destination timeout</a>  从列表中弹出一个值，将弹出的元素插入到另外一个列表中并返回它； 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止。</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-lindex.html" target="_blank" rel="noopener">LINDEX key index</a>  通过索引获取列表中的元素</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-linsert.html" target="_blank" rel="noopener">LINSERT key BEFORE|AFTER pivot value</a>  在列表的元素前或者后插入元素</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-llen.html" target="_blank" rel="noopener">LLEN key</a>  获取列表长度</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-lpop.html" target="_blank" rel="noopener">LPOP key</a>  移出并获取列表的第一个元素</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-lpush.html" target="_blank" rel="noopener">LPUSH key value1 [value2]</a>  将一个或多个值插入到列表头部</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-lpushx.html" target="_blank" rel="noopener">LPUSHX key value</a>  将一个值插入到已存在的列表头部</td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-lrange.html" target="_blank" rel="noopener">LRANGE key start stop</a>  获取列表指定范围内的元素</td>
+</tr>
+<tr>
+<td align="left">11</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-lrem.html" target="_blank" rel="noopener">LREM key count value</a>  移除列表元素</td>
+</tr>
+<tr>
+<td align="left">12</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-lset.html" target="_blank" rel="noopener">LSET key index value</a>  通过索引设置列表元素的值</td>
+</tr>
+<tr>
+<td align="left">13</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-ltrim.html" target="_blank" rel="noopener">LTRIM key start stop</a>  对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。</td>
+</tr>
+<tr>
+<td align="left">14</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-rpop.html" target="_blank" rel="noopener">RPOP key</a>  移除列表的最后一个元素，返回值为移除的元素。</td>
+</tr>
+<tr>
+<td align="left">15</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-rpoplpush.html" target="_blank" rel="noopener">RPOPLPUSH source destination</a>  移除列表的最后一个元素，并将该元素添加到另一个列表并返回</td>
+</tr>
+<tr>
+<td align="left">16</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-rpush.html" target="_blank" rel="noopener">RPUSH key value1 [value2]</a>  在列表中添加一个或多个值</td>
+</tr>
+<tr>
+<td align="left">17</td>
+<td align="left"><a href="https://www.runoob.com/redis/lists-rpushx.html" target="_blank" rel="noopener">RPUSHX key value</a>  为已存在的列表添加值</td>
+</tr>
+</tbody></table>
+<h4 id="案例-2"><a href="#案例-2" class="headerlink" title="案例"></a>案例</h4><ul>
+<li>lpush/rpush/lrange</li>
+<li>lpop/rpop</li>
+<li>lindex，按照索引获得元素，从上到下，可以想象成从左到右</li>
+<li>llen</li>
+<li>lrem key 删n个value，lrem list01 5 1（删除5个1）</li>
+<li>ltrim key 开始index 结束index，截取指定范围的值后再赋值给key</li>
+<li>rpoplpush 源列表 目的列表</li>
+<li>lset key index value</li>
+<li>linsert key before/after 值1 值2</li>
+</ul>
+<h4 id="性能总结"><a href="#性能总结" class="headerlink" title="性能总结"></a>性能总结</h4><ul>
+<li>是一个字符串链表，left、right都可以插入添加；</li>
+<li>如果键不存在，创建新的链表；</li>
+<li>如果键已存在，新增内容；</li>
+<li>如果值全移除，对应的键也就消失了。</li>
+<li>链表的操作无论是头和尾效率都极高，但假如是对中间元素进行操作，效率就惨淡了。</li>
+</ul>
+<h3 id="Redis集合-Set"><a href="#Redis集合-Set" class="headerlink" title="Redis集合(Set)"></a>Redis集合(Set)</h3><p>单值多value</p>
+<h4 id="常用-3"><a href="#常用-3" class="headerlink" title="常用"></a>常用</h4><table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">命令及描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-sadd.html" target="_blank" rel="noopener">SADD key member1 [member2]</a>  向集合添加一个或多个成员</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-scard.html" target="_blank" rel="noopener">SCARD key</a>  获取集合的成员数</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-sdiff.html" target="_blank" rel="noopener">SDIFF key1 [key2]</a>  返回给定所有集合的差集</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-sdiffstore.html" target="_blank" rel="noopener">SDIFFSTORE destination key1 [key2]</a>  返回给定所有集合的差集并存储在 destination 中</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-sinter.html" target="_blank" rel="noopener">SINTER key1 [key2]</a>  返回给定所有集合的交集</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-sinterstore.html" target="_blank" rel="noopener">SINTERSTORE destination key1 [key2]</a>  返回给定所有集合的交集并存储在 destination 中</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-sismember.html" target="_blank" rel="noopener">SISMEMBER key member</a>  判断 member 元素是否是集合 key 的成员</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-smembers.html" target="_blank" rel="noopener">SMEMBERS key</a>  返回集合中的所有成员</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-smove.html" target="_blank" rel="noopener">SMOVE source destination member</a>  将 member 元素从 source 集合移动到 destination 集合</td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-spop.html" target="_blank" rel="noopener">SPOP key</a>  移除并返回集合中的一个随机元素</td>
+</tr>
+<tr>
+<td align="left">11</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-srandmember.html" target="_blank" rel="noopener">SRANDMEMBER key [count]</a>  返回集合中一个或多个随机数</td>
+</tr>
+<tr>
+<td align="left">12</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-srem.html" target="_blank" rel="noopener">SREM key member1 [member2]</a>  移除集合中一个或多个成员</td>
+</tr>
+<tr>
+<td align="left">13</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-sunion.html" target="_blank" rel="noopener">SUNION key1 [key2]</a>  返回所有给定集合的并集</td>
+</tr>
+<tr>
+<td align="left">14</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-sunionstore.html" target="_blank" rel="noopener">SUNIONSTORE destination key1 [key2]</a>  所有给定集合的并集存储在 destination 集合中</td>
+</tr>
+<tr>
+<td align="left">15</td>
+<td align="left"><a href="https://www.runoob.com/redis/sets-sscan.html" target="_blank" rel="noopener">SSCAN key cursor [MATCH pattern] [COUNT count]</a>  迭代集合中的元素</td>
+</tr>
+</tbody></table>
+<h4 id="案例-3"><a href="#案例-3" class="headerlink" title="案例"></a>案例</h4><ul>
+<li>sadd/smemebers/sismember</li>
+<li>scard，获取集合里面的元素个数</li>
+<li>srem key value删除集合中的元素</li>
+<li>srandmember key某个整数（随机出几个数）</li>
+<li>spop key随机出栈</li>
+<li>smove key1 key2 在key1里的某个值赋给key2</li>
+<li>数学集合类<ul>
+<li>差集：sdiff</li>
+<li>交集：sinter</li>
+<li>并集：sunion</li>
+</ul>
+</li>
+</ul>
+<h3 id="Redis哈希-Hash"><a href="#Redis哈希-Hash" class="headerlink" title="Redis哈希(Hash)"></a>Redis哈希(Hash)</h3><p>KV模式不变，但V是一个键值对</p>
+<h4 id="常用-4"><a href="#常用-4" class="headerlink" title="常用"></a>常用</h4><table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">命令及描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hdel.html" target="_blank" rel="noopener">HDEL key field1 [field2]</a>  删除一个或多个哈希表字段</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hexists.html" target="_blank" rel="noopener">HEXISTS key field</a>  查看哈希表 key 中，指定的字段是否存在。</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hget.html" target="_blank" rel="noopener">HGET key field</a>  获取存储在哈希表中指定字段的值。</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hgetall.html" target="_blank" rel="noopener">HGETALL key</a>  获取在哈希表中指定 key 的所有字段和值</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hincrby.html" target="_blank" rel="noopener">HINCRBY key field increment</a>  为哈希表 key 中的指定字段的整数值加上增量 increment 。</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hincrbyfloat.html" target="_blank" rel="noopener">HINCRBYFLOAT key field increment</a>  为哈希表 key 中的指定字段的浮点数值加上增量 increment 。</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hkeys.html" target="_blank" rel="noopener">HKEYS key</a>  获取所有哈希表中的字段</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hlen.html" target="_blank" rel="noopener">HLEN key</a>  获取哈希表中字段的数量</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hmget.html" target="_blank" rel="noopener">HMGET key field1 [field2]</a>  获取所有给定字段的值</td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hmset.html" target="_blank" rel="noopener">HMSET key field1 value1 [field2 value2 ]</a>  同时将多个 field-value (域-值)对设置到哈希表 key 中。</td>
+</tr>
+<tr>
+<td align="left">11</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hset.html" target="_blank" rel="noopener">HSET key field value</a>  将哈希表 key 中的字段 field 的值设为 value 。</td>
+</tr>
+<tr>
+<td align="left">12</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hsetnx.html" target="_blank" rel="noopener">HSETNX key field value</a>  只有在字段 field 不存在时，设置哈希表字段的值。</td>
+</tr>
+<tr>
+<td align="left">13</td>
+<td align="left"><a href="https://www.runoob.com/redis/hashes-hvals.html" target="_blank" rel="noopener">HVALS key</a>  获取哈希表中所有值</td>
+</tr>
+<tr>
+<td align="left">14</td>
+<td align="left">HSCAN key cursor [MATCH pattern] [COUNT count]  迭代哈希表中的键值对。</td>
+</tr>
+</tbody></table>
+<h4 id="案例-4"><a href="#案例-4" class="headerlink" title="案例"></a>案例</h4><ul>
+<li><strong>hset/hget/hmset/hmget/hgetall/hdel</strong></li>
+<li>hlen</li>
+<li>hexists key 在key里面的某个值的key</li>
+<li><strong>hkeys/hvals</strong></li>
+<li>hincrby/hincrbyfloat</li>
+<li>hsetnx</li>
+</ul>
+<h3 id="Redis有序集合Zset-sorted-set"><a href="#Redis有序集合Zset-sorted-set" class="headerlink" title="Redis有序集合Zset(sorted set)"></a>Redis有序集合Zset(sorted set)</h3><p>在set基础上，加一个score值，之前set是k1 v1 v2 v3，现在zset是k1 socre1 v1 score2 v2</p>
+<h4 id="常用-5"><a href="#常用-5" class="headerlink" title="常用"></a>常用</h4><table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">命令及描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zadd.html" target="_blank" rel="noopener">ZADD key score1 member1 [score2 member2]</a>  向有序集合添加一个或多个成员，或者更新已存在成员的分数</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zcard.html" target="_blank" rel="noopener">ZCARD key</a>  获取有序集合的成员数</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zcount.html" target="_blank" rel="noopener">ZCOUNT key min max</a>  计算在有序集合中指定区间分数的成员数</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zincrby.html" target="_blank" rel="noopener">ZINCRBY key increment member</a>  有序集合中对指定成员的分数加上增量 increment</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zinterstore.html" target="_blank" rel="noopener">ZINTERSTORE destination numkeys key [key …]</a>  计算给定的一个或多个有序集的交集并将结果集存储在新的有序集合 key 中</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zlexcount.html" target="_blank" rel="noopener">ZLEXCOUNT key min max</a>  在有序集合中计算指定字典区间内成员数量</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zrange.html" target="_blank" rel="noopener">ZRANGE key start stop [WITHSCORES]</a>  通过索引区间返回有序集合成指定区间内的成员</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zrangebylex.html" target="_blank" rel="noopener">ZRANGEBYLEX key min max [LIMIT offset count]</a>  通过字典区间返回有序集合的成员</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zrangebyscore.html" target="_blank" rel="noopener">ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT]</a>  通过分数返回有序集合指定区间内的成员</td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zrank.html" target="_blank" rel="noopener">ZRANK key member</a>  返回有序集合中指定成员的索引</td>
+</tr>
+<tr>
+<td align="left">11</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zrem.html" target="_blank" rel="noopener">ZREM key member [member …]</a>  移除有序集合中的一个或多个成员</td>
+</tr>
+<tr>
+<td align="left">12</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zremrangebylex.html" target="_blank" rel="noopener">ZREMRANGEBYLEX key min max</a>  移除有序集合中给定的字典区间的所有成员</td>
+</tr>
+<tr>
+<td align="left">13</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zremrangebyrank.html" target="_blank" rel="noopener">ZREMRANGEBYRANK key start stop</a>  移除有序集合中给定的排名区间的所有成员</td>
+</tr>
+<tr>
+<td align="left">14</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zremrangebyscore.html" target="_blank" rel="noopener">ZREMRANGEBYSCORE key min max</a>  移除有序集合中给定的分数区间的所有成员</td>
+</tr>
+<tr>
+<td align="left">15</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zrevrange.html" target="_blank" rel="noopener">ZREVRANGE key start stop [WITHSCORES]</a>  返回有序集中指定区间内的成员，通过索引，分数从高到底</td>
+</tr>
+<tr>
+<td align="left">16</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zrevrangebyscore.html" target="_blank" rel="noopener">ZREVRANGEBYSCORE key max min [WITHSCORES]</a>  返回有序集中指定分数区间内的成员，分数从高到低排序</td>
+</tr>
+<tr>
+<td align="left">17</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zrevrank.html" target="_blank" rel="noopener">ZREVRANK key member</a>  返回有序集合中指定成员的排名，有序集成员按分数值递减(从大到小)排序</td>
+</tr>
+<tr>
+<td align="left">18</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zscore.html" target="_blank" rel="noopener">ZSCORE key member</a>  返回有序集中，成员的分数值</td>
+</tr>
+<tr>
+<td align="left">19</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zunionstore.html" target="_blank" rel="noopener">ZUNIONSTORE destination numkeys key [key …]</a>  计算给定的一个或多个有序集的并集，并存储在新的 key 中</td>
+</tr>
+<tr>
+<td align="left">20</td>
+<td align="left"><a href="https://www.runoob.com/redis/sorted-sets-zscan.html" target="_blank" rel="noopener">ZSCAN key cursor [MATCH pattern] [COUNT count]</a>  迭代有序集合中的元素（包括元素成员和元素分值）</td>
+</tr>
+</tbody></table>
+<h4 id="案例-5"><a href="#案例-5" class="headerlink" title="案例"></a>案例</h4><p><img src="../%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3/1565161186035.png" alt="1565161186035"></p>
+<ul>
+<li>zadd/zrange zrange最后可以加withscores</li>
+<li>zrangebyscore key 开始score 结束score<ul>
+<li>withscores</li>
+<li>(score 不包含，即开区间</li>
+<li>limit作用是返回限制，limit  开始index 多少步，类似分页</li>
+</ul>
+</li>
+<li>zrem key 某score下对应的value值，作用是删除元素</li>
+<li>zcard/zcount key score区间/zrank key values值，作用是获得下标值/zscore key对应值，获得分数</li>
+<li>zrevrank key values值，作用是逆序获得下标值</li>
+<li>zrevrange</li>
+<li>zrevrangebyscore key <strong>结束score 开始score</strong></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/17/%E7%AC%94%E8%AE%B0/Redis/03_Redis_%E8%A7%A3%E6%9E%90%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" rel="next" title="笔记/Redis/03_Redis_解析配置文件">
+                <i class="fa fa-chevron-left"></i> 笔记/Redis/03_Redis_解析配置文件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/17/%E7%AC%94%E8%AE%B0/Redis/01_Redis_NoSQL%E5%85%A5%E9%97%A8%E6%A6%82%E8%BF%B0/" rel="prev" title="笔记/Redis/01_Redis_NoSQL入门概述">
+                笔记/Redis/01_Redis_NoSQL入门概述 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="tomxwd" />
+            
+              <p class="site-author-name" itemprop="name">tomxwd</p>
+              <p class="site-description motion-element" itemprop="description">tomxwd</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">478</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/tomxwd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis-入门介绍"><span class="nav-number">1.</span> <span class="nav-text">Redis_入门介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#入门概述"><span class="nav-number">1.1.</span> <span class="nav-text">入门概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#是什么"><span class="nav-number">1.1.1.</span> <span class="nav-text">是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#能干嘛"><span class="nav-number">1.1.2.</span> <span class="nav-text">能干嘛</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#去哪下"><span class="nav-number">1.1.3.</span> <span class="nav-text">去哪下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么玩"><span class="nav-number">1.1.4.</span> <span class="nav-text">怎么玩</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VMWare-VMTools"><span class="nav-number">1.2.</span> <span class="nav-text">VMWare+VMTools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis的安装"><span class="nav-number">1.3.</span> <span class="nav-text">Redis的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows版安装"><span class="nav-number">1.3.1.</span> <span class="nav-text">Windows版安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重要提示："><span class="nav-number">1.3.2.</span> <span class="nav-text">重要提示：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux版安装"><span class="nav-number">1.3.3.</span> <span class="nav-text">Linux版安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis启动后杂项基础知识讲解"><span class="nav-number">1.3.4.</span> <span class="nav-text">Redis启动后杂项基础知识讲解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis数据类型"><span class="nav-number">1.4.</span> <span class="nav-text">Redis数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis的五大数据类型"><span class="nav-number">1.4.1.</span> <span class="nav-text">Redis的五大数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#String（字符串）"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">String（字符串）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hash（哈希，类似Java里的Map）"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">Hash（哈希，类似Java里的Map）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#List（列表）"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">List（列表）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Set（集合）"><span class="nav-number">1.4.1.4.</span> <span class="nav-text">Set（集合）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Zset（sorted-set：有序集合）"><span class="nav-number">1.4.1.5.</span> <span class="nav-text">Zset（sorted set：有序集合）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哪里去获得Redis常见数据类型操作命令"><span class="nav-number">1.4.2.</span> <span class="nav-text">哪里去获得Redis常见数据类型操作命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis键-key"><span class="nav-number">1.4.3.</span> <span class="nav-text">Redis键(key)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常用"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">常用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">案例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis字符串-String"><span class="nav-number">1.4.4.</span> <span class="nav-text">Redis字符串(String)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常用-1"><span class="nav-number">1.4.4.1.</span> <span class="nav-text">常用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例-1"><span class="nav-number">1.4.4.2.</span> <span class="nav-text">案例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis列表-List"><span class="nav-number">1.4.5.</span> <span class="nav-text">Redis列表(List)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常用-2"><span class="nav-number">1.4.5.1.</span> <span class="nav-text">常用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例-2"><span class="nav-number">1.4.5.2.</span> <span class="nav-text">案例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#性能总结"><span class="nav-number">1.4.5.3.</span> <span class="nav-text">性能总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis集合-Set"><span class="nav-number">1.4.6.</span> <span class="nav-text">Redis集合(Set)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常用-3"><span class="nav-number">1.4.6.1.</span> <span class="nav-text">常用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例-3"><span class="nav-number">1.4.6.2.</span> <span class="nav-text">案例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis哈希-Hash"><span class="nav-number">1.4.7.</span> <span class="nav-text">Redis哈希(Hash)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常用-4"><span class="nav-number">1.4.7.1.</span> <span class="nav-text">常用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例-4"><span class="nav-number">1.4.7.2.</span> <span class="nav-text">案例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis有序集合Zset-sorted-set"><span class="nav-number">1.4.8.</span> <span class="nav-text">Redis有序集合Zset(sorted set)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常用-5"><span class="nav-number">1.4.8.1.</span> <span class="nav-text">常用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例-5"><span class="nav-number">1.4.8.2.</span> <span class="nav-text">案例</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

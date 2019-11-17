@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hadoop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="06_Hadoop_运行模式Hadoop运行模式包括：本地模式、伪分布式模式以及完全分布式模式。 Hadoop官方网站 getting start 本地运行模式官方Grep案例1234$ mkdir input$ cp etc&#x2F;hadoop&#x2F;*.xml input$ bin&#x2F;hadoop jar share&#x2F;hadoop&#x2F;mapreduce&#x2F;hadoop-mapreduce-examples-3.">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="06_Hadoop_运行模式">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;07&#x2F;Hadoop&#x2F;06_Hadoop_%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="06_Hadoop_运行模式Hadoop运行模式包括：本地模式、伪分布式模式以及完全分布式模式。 Hadoop官方网站 getting start 本地运行模式官方Grep案例1234$ mkdir input$ cp etc&#x2F;hadoop&#x2F;*.xml input$ bin&#x2F;hadoop jar share&#x2F;hadoop&#x2F;mapreduce&#x2F;hadoop-mapreduce-examples-3.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;07&#x2F;Hadoop&#x2F;06_Hadoop_%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F&#x2F;06_Hadoop_%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F&#x2F;1570547884705.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;07&#x2F;Hadoop&#x2F;06_Hadoop_%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F&#x2F;06_Hadoop_%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F&#x2F;1571144054503.png">
+<meta property="og:updated_time" content="2019-11-16T09:59:16.292Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;07&#x2F;Hadoop&#x2F;06_Hadoop_%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F&#x2F;06_Hadoop_%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F&#x2F;1570547884705.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.blog.tomxwd.com/2019/10/07/Hadoop/06_Hadoop_运行模式/"/>
+
+
+
+
+
+  <title>06_Hadoop_运行模式 | tomxwd.blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/10/07/Hadoop/06_Hadoop_%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">06_Hadoop_运行模式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-07T18:13:48+08:00">
+                2019-10-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="06-Hadoop-运行模式"><a href="#06-Hadoop-运行模式" class="headerlink" title="06_Hadoop_运行模式"></a>06_Hadoop_运行模式</h1><p>Hadoop运行模式包括：本地模式、伪分布式模式以及完全分布式模式。</p>
+<p><a href="http://hadoop.apache.org/" target="_blank" rel="noopener">Hadoop官方网站</a></p>
+<p><a href="https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html" target="_blank" rel="noopener">getting start</a></p>
+<h2 id="本地运行模式"><a href="#本地运行模式" class="headerlink" title="本地运行模式"></a>本地运行模式</h2><h3 id="官方Grep案例"><a href="#官方Grep案例" class="headerlink" title="官方Grep案例"></a>官方Grep案例</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir input</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cp etc/hadoop/*.xml input</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-3.2.1.jar grep input output <span class="string">'dfs[a-z.]+'</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat output/*</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>cd到hadoop目录下</p>
+</li>
+<li><p>mkdir input</p>
+</li>
+<li><p>复制etc下的配置文件到input</p>
+<ul>
+<li>cp etc/haddop/*.xml input</li>
+</ul>
+</li>
+<li><p>运行share目录下的案例jar，且指定为grep案例，指定input以及output，这里output不可以先创建，否则报错，然后正则一下</p>
+<ul>
+<li>hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.2.jar grep input output ‘dfs[a-z.]+’</li>
+</ul>
+</li>
+<li><p>查看output目录</p>
+<ul>
+<li><p>两个文件，一个是_SUCCESS，这个只是标记，标记成功完成。</p>
+</li>
+<li><p>另一个文件是结果，这里cat一下看看</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1	dfsadmin</span><br></pre></td></tr></table></figure>
+
+<p>只有一个结果。</p>
+</li>
+<li><p>可以改一下正则表达式的内容查看输出。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="官方WordCount案例"><a href="#官方WordCount案例" class="headerlink" title="官方WordCount案例"></a>官方WordCount案例</h3><p>目的：统计单词的个数</p>
+<ol>
+<li><p>cd到hadoop目录下</p>
+</li>
+<li><p>创建wcinput目录</p>
+<ul>
+<li>mkdir wcinput</li>
+</ul>
+</li>
+<li><p>在wcinput目录下创建wc.input文件</p>
+<ul>
+<li>touch wc.input</li>
+</ul>
+</li>
+<li><p>编辑wc.input文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hadoop yarn</span><br><span class="line">hadoop mapreduce</span><br><span class="line">tomxwd</span><br><span class="line">tomxwd</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>回到hadoop目录</p>
+</li>
+<li><p>运行share目录下的案例jar，指定wordcount案例，指定wcinput和wcoutput</p>
+<ul>
+<li>hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.2.jar wordcount wcinput wcoutput</li>
+</ul>
+</li>
+<li><p>查看执行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hadoop yarn</span><br><span class="line">hadoop mapreduce</span><br><span class="line">tomxwd</span><br><span class="line">tomxwd</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<h2 id="伪分布式模式"><a href="#伪分布式模式" class="headerlink" title="伪分布式模式"></a>伪分布式模式</h2><h3 id="启动HDFS并运行MapReduce程序"><a href="#启动HDFS并运行MapReduce程序" class="headerlink" title="启动HDFS并运行MapReduce程序"></a>启动HDFS并运行MapReduce程序</h3><blockquote>
+<p><a href="https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html#Pseudo-Distributed_Operation" target="_blank" rel="noopener">官网文档</a></p>
+<p>在官网右侧，可以找到Configuration，是关于xml配置文件的详细解释</p>
+</blockquote>
+<p>伪分布式模式的配置信息与完全分布式模式的一样，只是说伪分布式模式只用一台服务器来完成，适合学习的时候用。</p>
+<ol>
+<li><p>修改etc/hadoop/core-site.xml配置文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HDFS中NameNode的地址 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 指定Hadoop运行时产生文件的存储目录，默认是在/tmp/hadoop-$&#123;user.name&#125; --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>/opt/open/environment/hadoop-2.9.2/data/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改etc/hadoop/hdfs-site.xml配置文件</p>
+<p>默认值是3</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HDFS副本的数量 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改etc/hadoop/hadoop-env.sh文件的jdk</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Set Hadoop-specific environment variables here.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> The only required environment variable is JAVA_HOME.  All others are</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> optional.  When running a distributed configuration it is best to</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">set</span> JAVA_HOME <span class="keyword">in</span> this file, so that it is correctly defined on</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> remote nodes.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> The java implementation to use.</span></span><br><span class="line">JAVA_HOME=/opt/open/environment/jdk1.8.0_221</span><br><span class="line">export JAVA_HOME=$&#123;JAVA_HOME&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的说明写了，指定JAVA_HOME，其他的不用</p>
+</li>
+<li><p>启动集群</p>
+<ul>
+<li><p>格式化NameNode（第一次启动时格式化，以后就不要总格式化）</p>
+<p>bin/hdfs namenode -format</p>
+<p>如果格式化遇到任何问题，可能是data文件没有删除，日志文件没有删除</p>
+</li>
+<li><p>启动NameNode</p>
+<p>sbin/hadoop-daemon.sh start namenode</p>
+<ul>
+<li>出现提示：starting namenode, logging to /opt/open/environment/hadoop-2.9.2/logs/hadoop-tomxwd-namenode-hadoop101.out</li>
+</ul>
+</li>
+<li><p>启动DataNode</p>
+<p>sbin/hadoop-daemon.sh start datanode</p>
+<ul>
+<li>出现提示：starting datanode, logging to /opt/open/environment/hadoop-2.9.2/logs/hadoop-tomxwd-datanode-hadoop101.out</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>查看集群</p>
+<ul>
+<li>查看是否启动成功<ul>
+<li>可以用jps命令来查看进程，是java ps的意思，有NameNode进程，以及DataNode进程</li>
+<li><a href="http://192.168.5.101:50070是访问地址，主要关注最后的Utilities&gt;&gt;Browse" target="_blank" rel="noopener">http://192.168.5.101:50070是访问地址，主要关注最后的Utilities&gt;&gt;Browse</a> Directory</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>添加目录：</p>
+<ul>
+<li>bin/hdfs dfs -mkdir -p /user/tomxwd/input</li>
+</ul>
+</li>
+<li><p>查看新添加的目录：</p>
+<ul>
+<li>bin/hdfs dfs -ls -R /</li>
+</ul>
+</li>
+<li><p>把本地wcinput上传到HDFS上：</p>
+<ul>
+<li>bin/hdfs dfs -put wcinput/wc.input /user/tomxwd/input</li>
+</ul>
+</li>
+<li><p>执行一下wordcount案例：</p>
+<ul>
+<li>bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.2.jar wordcount /user/tomxwd/input /user/tomxwd/output</li>
+</ul>
+</li>
+<li><p>到页面上看是否有output，然后下载下来看结果，或者用bin/hdfs dfs -cat /user/tomxwd/output/p*看结果即可。</p>
+</li>
+</ol>
+<h4 id="NameNode格式化注意事项"><a href="#NameNode格式化注意事项" class="headerlink" title="NameNode格式化注意事项"></a>NameNode格式化注意事项</h4><p>格式化前的工作：</p>
+<ol>
+<li><p>在格式化前，先用jps看看是否已经启动了NameNode，如果启动了要结束进程。</p>
+</li>
+<li><p>然后再看data和log文件，如果有，则删掉。</p>
+</li>
+<li><p>最后进行NameNode格式化。</p>
+</li>
+</ol>
+<p>为什么不能一直格式化NameNode？</p>
+<ul>
+<li><p>cd到data/tmp/dfs/name/current，查看VERSION文件的内容，以及到data/tmp/dfs/data/current，查看VERSION的内容。</p>
+<ul>
+<li>关注clusterID的值</li>
+</ul>
+</li>
+<li><p>因为格式化NameNode，会产生新的集群id，导致NameNode和DataNode的集群id不一致，集群找不到以往的数据，所以在格式化NameNode的时候，一定要删除data数据和log日志，然后再格式化NameNode</p>
+</li>
+</ul>
+<p><img src="06_Hadoop_%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F/1570547884705.png" alt="1570547884705"></p>
+<h4 id="查看日志"><a href="#查看日志" class="headerlink" title="查看日志"></a>查看日志</h4><p>出现问题的时候看datanode.log文件，也可以看看namenode.log的信息。</p>
+<h3 id="启动YARN并运行MapReduce程序"><a href="#启动YARN并运行MapReduce程序" class="headerlink" title="启动YARN并运行MapReduce程序"></a>启动YARN并运行MapReduce程序</h3><p>分析</p>
+<ul>
+<li>配置集群在YARN上运行MR</li>
+<li>启动、测试集群<strong>增删查</strong></li>
+<li>在YARN上执行WordCount案例</li>
+</ul>
+<p>执行步骤</p>
+<ol>
+<li><p>配置集群</p>
+<ul>
+<li><p>配置yarn-env.sh</p>
+<p>配置一下JAVA_HOME</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> some Java parameters</span></span><br><span class="line">export JAVA_HOME=/opt/open/environment/jdk1.8.0_221</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置yarn-site.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Reducer获取数据的方法 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 指定YARN的ResourceManager的地址 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hadoop101<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置mapred-env.sh</p>
+<p>配置一下JAVAHOME</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> some Java parameters</span></span><br><span class="line">export JAVA_HOME=/opt/open/environment/jdk1.8.0_221</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置mapred-site.xml（把mapred-site.xml.template重命名）</p>
+<p><code>mv mapred-site.xml.template mapred-site.xml</code></p>
+<p><code>vim mapred-site.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定MR运行在YARN上 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>启动集群</p>
+<ul>
+<li><p>启动前确保NameNode和DataNode已经启动</p>
+</li>
+<li><p>启动ResourceManager</p>
+<p><code>sbin/yarn-daemon.sh start resourcemanager</code></p>
+</li>
+<li><p>启动NodeManager</p>
+<p><code>sbin/yarn-daemon.sh start nodemanager</code></p>
+</li>
+</ul>
+</li>
+<li><p>集群操作</p>
+<ul>
+<li><p>YARN的浏览器页面查看</p>
+<p><a href="http://192.168.5.101:8088/cluster" target="_blank" rel="noopener">http://192.168.5.101:8088/cluster</a></p>
+</li>
+</ul>
+</li>
+<li><p>删掉之前的output，然后试着再次运行wordcount案例</p>
+<p><code>hdfs dfs -rm -r /user/tomxwd/output</code></p>
+<p><code>hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.2.jar wordcount /user/tomxwd/input /user/tomxwd/output</code></p>
+</li>
+<li><p>在运行的时候查看浏览器页面</p>
+</li>
+</ol>
+<h4 id="配置历史服务器"><a href="#配置历史服务器" class="headerlink" title="配置历史服务器"></a>配置历史服务器</h4><p>为了查看程序的历史运行情况，需要配置一下历史服务器。具体步骤：</p>
+<ol>
+<li><p>配置mapred-site.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 历史服务器端地址  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hadoop101:10020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 历史服务器web端地址  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hadoop101:19888<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动历史服务器</p>
+<p><code>sbin/mr-jobhistory-daemon.sh start historyserver</code></p>
+</li>
+<li><p>用jps查看历史服务器是否启动</p>
+</li>
+<li><p>查看JobHistory</p>
+<p><a href="http://192.168.5.101:19888/jobhistory" target="_blank" rel="noopener">http://192.168.5.101:19888/jobhistory</a></p>
+</li>
+</ol>
+<h4 id="配置日志的聚集"><a href="#配置日志的聚集" class="headerlink" title="配置日志的聚集"></a>配置日志的聚集</h4><p>日志聚集概念：应用运行完成后，将程序的运行日志信息上传到HDFS系统上；</p>
+<p>日志聚集的好处：可以方便查看到程序运行的详情，方便开发调试；</p>
+<p>注意：<strong>开启日志聚集功能，需要重新启动NodeManager、ResourceManager和HistoryManager。</strong></p>
+<p>​    用jps看开启了哪些，用原来启动的指令，改为stop即可。</p>
+<p>步骤：</p>
+<ol>
+<li><p>配置yarn-site.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 日志聚集功能 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.log-aggregation-enable<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 日志保留时间为7天 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.log-aggregation.retain-seconds<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>604800<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关闭NodeManager、ResourceManager和HistoryServer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yarn-daemon.sh stop nodemanager</span><br><span class="line">yarn-daemon.sh stop resourcemanager</span><br><span class="line">mr-jobhistory-daemon.sh stop historyserver</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动NodeManager、ResourceManager和HistoryServer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yarn-daemon.sh start nodemanager</span><br><span class="line">yarn-daemon.sh start resourcemanager</span><br><span class="line">mr-jobhistory-daemon.sh start historyserver</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除HDFS上存在的输出文件output</p>
+<p><code>hdfs dfs -rm -rf /user/tomxwd/output</code></p>
+</li>
+<li><p>执行WordCount程序</p>
+<p><code>hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.2.jar wordcount /user/tomxwd/input /user/tomxwd/output</code></p>
+</li>
+<li><p>查看日志</p>
+<ul>
+<li>可以在本地日志文件目录看</li>
+<li>可以在网页直接点程序的日志看</li>
+<li><a href="http://hadoop101:19888/jobhistory" target="_blank" rel="noopener">http://hadoop101:19888/jobhistory</a> 然后点击job后面的logs</li>
+</ul>
+</li>
+</ol>
+<h4 id="配置文件说明"><a href="#配置文件说明" class="headerlink" title="配置文件说明"></a>配置文件说明</h4><p>Hadoop配置文件分为两类：默认配置文件和自定义配置文件，只有用户想修改某一默认配置值时，才需要修改自定义配置文件，更改相应的属性值。</p>
+<p>默认配置文件：</p>
+<p>在官网，快速开始，左边最底下有Configuration，下面都是默认配置文件的信息。</p>
+<table>
+<thead>
+<tr>
+<th>要获取的默认文件</th>
+<th>文件存放在Hadoop的jar包中的位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>core-default.xml</td>
+<td>hadoop-common-x.x.x.jar/core-default.xml</td>
+</tr>
+<tr>
+<td>hdfs-default.xml</td>
+<td>hadoop-hdfs-x.x.x.jar/hdfs-default.xml</td>
+</tr>
+<tr>
+<td>yarn-default.xml</td>
+<td>hadoop-yarn-common-x.x.x.jar/yarn-default.xml</td>
+</tr>
+<tr>
+<td>mapred-default.xml</td>
+<td>hadoop-mapreduce-client-core-x.x.x.jar/mapred-default.xml</td>
+</tr>
+</tbody></table>
+<p>自定义配置文件：</p>
+<p>core-site.xml、hdfs-site.xml、yarn-site.xml、mapred-site.xml四个配置文件存放在%HADOOP_HOME/etc/hadoop这个路径，用户可以根据项目需求重新进行修改配置。</p>
+<h2 id="完全分布式"><a href="#完全分布式" class="headerlink" title="完全分布式"></a>完全分布式</h2><p>分析：</p>
+<ol>
+<li>准备3台客户机（关闭防火墙、静态ip、主机名称）</li>
+<li>安装JDK</li>
+<li>配置环境变量</li>
+<li>安装hadoop</li>
+<li>配置环境变量</li>
+<li>配置集群</li>
+<li>单点启动</li>
+<li>配置ssh</li>
+<li>群起并测试</li>
+</ol>
+<h3 id="虚拟机准备"><a href="#虚拟机准备" class="headerlink" title="虚拟机准备"></a>虚拟机准备</h3><p>创建hadoop102，hadoop103，hadoop104三部虚拟机。</p>
+<h3 id="编写集群分发脚本xsync"><a href="#编写集群分发脚本xsync" class="headerlink" title="编写集群分发脚本xsync"></a>编写集群分发脚本xsync</h3><ol>
+<li><p>scp（secure copy）安全拷贝</p>
+<ul>
+<li>scp定义：<ul>
+<li>scp可以实现服务器与服务器之间的数据拷贝（from server1 to server2）</li>
+</ul>
+</li>
+<li>基本语法<ul>
+<li>scp         -r         $pdir/$fname                        $user@$host:$pdir/$fname</li>
+<li>命令       递归     要拷贝的文件路径/名称        目标用户@主机:目标路径/名称</li>
+</ul>
+</li>
+<li>案例实操<ul>
+<li>在hadoop101上，将hadoop101中/opt/open目录下的软件拷贝到hadoop102上。<ul>
+<li>scp -r /opt/open root@hadoop102:/opt/open</li>
+</ul>
+</li>
+<li>在hadoop103上，将hadoop101服务器上的/opt/open 目录下的软件拷贝到hadoop103上。<ul>
+<li>sudo scp -r tomxwd@hadoop101:/opt/open root@hadoop103:/opt/open</li>
+<li>sudo scp -r tomxwd@hadoop101:/opt/open ./</li>
+</ul>
+</li>
+<li>在hadoop103上，将hadoop101服务器上的/opt/open 目录下的软件拷贝到hadoop104上。<ul>
+<li>sudo scp -r tomxwd@hadoop101:/opt/open root@hadoop104:/opt/open</li>
+</ul>
+</li>
+<li>注意要把拷贝过去的文件该权限。/etc/profile同样操作，以及最后需要source /etc/profile即可。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>rsync远程同步工具</p>
+<p>rsync主要用于备份和镜像，具有速度快、避免复制相同内容和支持符号链接的优点。</p>
+<p><strong>rsync和scp的区别：</strong>用rsync做文件的复制要比scp的速度快，rsync只对差异文件做更新，而scp是把所有文件复制过去。</p>
+<ul>
+<li><p>基本语法</p>
+<ul>
+<li><p>rsync            -rvl            $pdir/$fname                    $user@host:$pdir/$fname</p>
+</li>
+<li><p>命令              选项参数  要拷贝的文件路径/名称     目标用户@主机:目标路径/名称</p>
+</li>
+<li><p>选项参数说明：</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-r</td>
+<td>递归</td>
+</tr>
+<tr>
+<td>-v</td>
+<td>显示复制过程</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>拷贝符号链接</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+<li><p>案例实操</p>
+<ul>
+<li>把hadoop101服务器上的/opt/open目录同步到hadoop102服务器的root用户的/opt/open目录：<ul>
+<li>rsync -rvl /opt/open/ root@hadoop102:/opt/open</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>xsync集群分发脚本</p>
+<ul>
+<li><p>需求：循环复制文件到所有节点的相同目录下</p>
+</li>
+<li><p>需求分析：</p>
+<ul>
+<li><p>rsync命令原始拷贝：</p>
+<p>rsync -rvl /opt/module    root@hadoop103:/opt</p>
+</li>
+<li><p>期望脚本：</p>
+<p>xsync 要同步的文件名称</p>
+</li>
+<li><p>说明：</p>
+<p>在/home/tomxwd/bin这个目录下存放的脚本，tomxwd用户可以在系统的任何地方直接运行。</p>
+</li>
+</ul>
+</li>
+<li><p>脚本实现</p>
+<ul>
+<li><p>在/home/tomxwd目录下创建bin目录，并在bin目录下创建xsync文件，文件内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 1. 获取输出参数的个数，如果没有参数，就直接退出</span></span><br><span class="line">pcount=$#</span><br><span class="line">echo $pcount</span><br><span class="line">echo $1</span><br><span class="line">if (($pcount==0))</span><br><span class="line">then</span><br><span class="line">        echo no args;</span><br><span class="line">        exit</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2. 获取文件的名称</span></span><br><span class="line">p1=$1</span><br><span class="line">fname=`basename $p1`</span><br><span class="line">echo fname=$fname</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3. 获取上级目录的绝对路径 <span class="built_in">cd</span> -P是进入到软链接实际的路径</span></span><br><span class="line">pdir=`cd -P $(dirname $p1); pwd`</span><br><span class="line">echo pdir=$pdir</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 4. 获取当前用户名称</span></span><br><span class="line">user=`whoami`</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 5. 循环</span></span><br><span class="line">for((host=103; host&lt;105; host++));do</span><br><span class="line">        echo --------------hadoop$host-------------------</span><br><span class="line">   rsync -rvl $pdir/$fname $user@hadoop$host:$pdir</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>修改脚本xsync具有执行权限</p>
+<p>chmod 777 xsync</p>
+<p>u+o也够用了</p>
+</li>
+<li><p>调用脚本形式：xsync文件名称</p>
+<pre><code>xsync /home/tomxwd/bin</code></pre><ul>
+<li>注意：如果将xsync放到/home/tomxwd/bin目录下仍然不能实现全局使用，可以将xsync移动到/usr/local/bin目录下。可以用echo $PATH命令看是否包含/home/tomxwd/bin目录即可确定能否使用。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="集群配置"><a href="#集群配置" class="headerlink" title="集群配置"></a>集群配置</h3><ol>
+<li>集群部署规划</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>hadoop102</th>
+<th>hadoop103</th>
+<th>hadoop104</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HDFS</td>
+<td>NameNode<br />DataNode</td>
+<td><br />DataNode</td>
+<td>SecondaryNameNode<br />DataNode</td>
+</tr>
+<tr>
+<td>YARN</td>
+<td><br />NodeManager</td>
+<td>ResourceManager<br />NodeManager</td>
+<td><br />NodeManager</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li><p>配置集群</p>
+<ul>
+<li><p>核心配置文件</p>
+<p>core-site.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HDFS中NameNode的地址 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://hadoop102:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 指定Hadoop运行时产生文件的存储目录，默认是在/tmp/hadoop-$&#123;user.name&#125; --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>/opt/open/environment/hadoop-2.9.2/data/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>HDFS配置文件</p>
+<p>hadoop-env.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/opt/open/environment/jdk1.8.0_221</span><br></pre></td></tr></table></figure>
+
+<p>hdfs-site.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定HDFS副本的数量 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>3<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 指定Hadoop辅助名称节点主机配置 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.secondary.http-address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hadoop104:50090<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>YARN配置文件</p>
+<p>yarn-env.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/opt/open/environment/jdk1.8.0_221</span><br></pre></td></tr></table></figure>
+
+<p>yarn-site.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Reducer获取数据的方法 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 指定YARN的ResourceManager的地址 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hadoop103<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>MapReduce配置文件</p>
+<p>mapred-env.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/opt/open/environment/jdk1.8.0_221</span><br></pre></td></tr></table></figure>
+
+<p>mapred-site.xml（拷贝mapred-site.xml.template得到）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 指定MR运行在YARN上 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>在集群上分发配置好的Hadoop配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xsync /opt/open/environment/hadoop-2.9.2/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看文件分发情况</p>
+<p>用cat指令即可。</p>
+</li>
+</ol>
+<h3 id="集群单点启动"><a href="#集群单点启动" class="headerlink" title="集群单点启动"></a>集群单点启动</h3><ol>
+<li><p>如果是第一次启动集群，需要格式化NameNode</p>
+<p>前提是，jps看，没有启动任何程序。删除data以及logs文件夹，再格式化！</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop namenode -format</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在hadoop102上启动NameNode</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop-daemon.sh start namenode</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在hadoop102、hadoop103以及hadoop104上分别启动DataNode</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop-daemon.sh start datanode</span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+</ol>
+<h3 id="配置SSH无密登录配置"><a href="#配置SSH无密登录配置" class="headerlink" title="配置SSH无密登录配置"></a>配置SSH无密登录配置</h3><ol>
+<li><p>配置ssh</p>
+<ul>
+<li><p>基本语法</p>
+<p>ssh另一台电脑的ip地址</p>
+</li>
+<li><p>ssh连接时出现Host key verification failed的解决方法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[tomxwd@hadoop102 ~]$ ssh 192.168.5.102</span><br><span class="line">The authenticity of host '192.168.5.102 (192.168.5.102)' can't be established.</span><br><span class="line">RSA key fingerprint is 97:36:de:ba:15:f4:99:4c:e5:0f:0a:22:03:be:72:e9.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line">Warning: Permanently added '192.168.5.102' (RSA) to the list of known hosts.</span><br><span class="line">tomxwd@192.168.5.102's password: </span><br><span class="line">Last login: Tue Oct 15 13:24:23 2019 from 192.168.5.1</span><br></pre></td></tr></table></figure>
+
+<p>输入yes并输入密码即可</p>
+</li>
+</ul>
+</li>
+<li><p>无密钥配置</p>
+<ul>
+<li><p>免密登录原理：</p>
+<p><img src="06_Hadoop_%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F/1571144054503.png" alt="1571144054503"></p>
+</li>
+<li><p>生成公钥和私钥</p>
+<p>在home目录下的.ssh文件夹（隐藏文件夹）下，使用：</p>
+<p>ssh-keygen -t rsa</p>
+<p>然后敲三个回车，就会生成两个文件id_rsa（私钥）、id_rsa.pub（公钥）</p>
+</li>
+<li><p>将公钥拷贝到要免密登录的目标机器上</p>
+<p>ssh-copy-id hadoop102</p>
+<p>ssh-copy-id hadoop103</p>
+<p>ssh-copy-id hadoop104</p>
+<p>三个都要copy，包括本身；</p>
+<p>在三台机器上都需要生成sshkey，并且三台都要有对方的公钥。</p>
+<p><strong>注意：在hadoop102上采用root用户，配置无密登录到hadoop102，hadoop103，hadoop104，然后在hadoop103上采用tomxwd用户，配置无密登录到hadoop102，hadoop103，hadoop104上。</strong></p>
+<p>原因主要是namenode以及resourcemanager需要跟各个服务器互通信息。</p>
+</li>
+<li><p>除了tomxwd用户外，还需要把root用户也配置ssh</p>
+<p>su root 切换到root用户，重复上一步即可。(如果root目录下没有.ssh文件,就用ssh localhost来生成一次，其实就是用一次ssh即可）</p>
+</li>
+</ul>
+</li>
+<li><p>.ssh文件夹下（~/.ssh）的文件功能解释</p>
+<table>
+<thead>
+<tr>
+<th>文件名</th>
+<th>功能解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>known_hosts</td>
+<td>记录ssh访问过的计算机的公钥（public key）</td>
+</tr>
+<tr>
+<td>id_rsa</td>
+<td>生成的私钥</td>
+</tr>
+<tr>
+<td>id_rsa.pub</td>
+<td>生成的公钥</td>
+</tr>
+<tr>
+<td>authorized_keys</td>
+<td>存放授权过的无密登录服务器公钥</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<h3 id="群起集群"><a href="#群起集群" class="headerlink" title="群起集群"></a>群起集群</h3><ol>
+<li><p>配置slaves</p>
+<p>/etc/hadoop/slaves配置文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop102</span><br><span class="line">hadoop103</span><br><span class="line">hadoop104</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：该文件中添加的内容结尾不允许有空格，文件中不允许有空行。</strong>里面默认的localhost一定要去掉。</p>
+<p>同步所有节点配置文件：</p>
+<p><code>xsync slaves</code></p>
+</li>
+<li><p>启动集群</p>
+<ul>
+<li><p>hdfs（在hadoop102上启动）</p>
+<p><code>start-dfs.sh</code></p>
+</li>
+<li><p>yarn（在hadoop103上启动，因为resourcemanager在103上）</p>
+<p><code>start-yarn.sh</code></p>
+<p><strong>注意：NameNode和ResourceManager如果不是同一台机器，不能在NameNode上启动YARN，应该在ResourceManager所在的机器上启动YARN</strong></p>
+</li>
+</ul>
+</li>
+<li><p>集群基本测试</p>
+<ul>
+<li><p>上传文件到集群</p>
+<ul>
+<li><p>上传小文件</p>
+<p><code>hdfs dfs -mkdir -p /user/tomxwd/input</code></p>
+<p><code>hdfs dfs -put wcinput/wc.input /user/tomxwd/input</code></p>
+</li>
+<li><p>上传大文件</p>
+<p><code>hadoop fs -put /opt/open/download/hadoop-2.9.2.tar.gz /</code></p>
+</li>
+</ul>
+</li>
+<li><p>上传文件后查看文件存放在什么位置</p>
+<ul>
+<li><p>查看HDFS文件存储路径    </p>
+<p>/opt/open/environment/hadoop-2.9.2/data/tmp/dfs/data/current/BP-918887964-192.168.5.102-1571093054040/current/finalized/subdir0/subdir0</p>
+</li>
+<li><p>可以把几块文件用&gt;&gt;重定向追加到一个文件中，进行解压，发现是刚刚上传的hadoop压缩包。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="集群启动-停止方式总结"><a href="#集群启动-停止方式总结" class="headerlink" title="集群启动/停止方式总结"></a>集群启动/停止方式总结</h3><ol>
+<li><p>各个服务组件逐一启动/停止</p>
+<ul>
+<li><p>分别启动/停止HDFS组件</p>
+<p><code>hadoop-daemon.sh start/stop namenode/datanode/secondarynamenode</code></p>
+</li>
+<li><p>启动/停止YARN</p>
+<p><code>yarn-daemon.sh start/stop resourcemanager/nodemanager</code></p>
+</li>
+</ul>
+</li>
+<li><p>各个模块分开启动/停止（配置ssh是前提）<strong>常用</strong></p>
+<ul>
+<li>整体启动/停止HDFS<ul>
+<li>start-dfs.sh</li>
+<li>stop-dfs.sh</li>
+</ul>
+</li>
+<li>整体启动/停止YARN<ul>
+<li>start-yarn.sh</li>
+<li>stop-yarn.sh</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="集群时间同步（root用户操作）"><a href="#集群时间同步（root用户操作）" class="headerlink" title="集群时间同步（root用户操作）"></a>集群时间同步（root用户操作）</h3><p>时间同步的方式：找一个机器，作为时间服务器，所有的机器与这台集群时间进行定时的同步，比如每隔十分钟同步一次时间。</p>
+<p><strong>时间服务器hadoop102—-hadoop103定时去获取hadoop102时间服务器主机时间——&gt;其他服务器hadoop103</strong></p>
+<ul>
+<li><p>时间服务器配置：</p>
+<ol>
+<li><p>检查ntp是否安装</p>
+<p><code>rpm -qa | grep ntp</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fontpackages-filesystem-1.41-1.1.el6.noarch</span><br><span class="line">ntp-4.2.6p5-12.el6.centos.2.x86_64</span><br><span class="line">ntpdate-4.2.6p5-12.el6.centos.2.x86_64</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改ntp配置文件</p>
+<p><code>vim /etc/ntp.conf</code></p>
+<ul>
+<li><p>修改1：授权192.168.1.0-192.168.1.255网段上所有机器可以从这台机器上查询和同步时间</p>
+<p># restrict 192.168.1.0 mask 255.255.255.0 nomodify notrap</p>
+<p>改为：</p>
+<p># restrict 192.168.1.0 mask 255.255.255.0 nomodify notrap</p>
+<p>这里，192.168.1.0需要改成自己的网段，如192.168.5.0</p>
+</li>
+<li><p>修改2：集群在局域网中，不使用其他互联网上的时间</p>
+<p>server 0.centos.pool.ntp.org iburst</p>
+<p>server 1.centos.pool.ntp.org iburst</p>
+<p>server 2.centos.pool.ntp.org iburst</p>
+<p>server 3.centos.pool.ntp.org iburst</p>
+<p>改为：</p>
+<p># server0 .centos.pool.ntp.org iburst</p>
+<p># server1 .centos.pool.ntp.org iburst</p>
+<p># server2 .centos.pool.ntp.org iburst</p>
+<p># server3 .centos.pool.ntp.org iburst</p>
+</li>
+<li><p>添加3：当该结点丢失网络连接，依然可以采用本地时间作为时间服务器为集群中的其他结点提供时间同步）</p>
+<p>server 127.127.1.0</p>
+<p>fudge 127.127.1.0 stratum 10</p>
+</li>
+</ul>
+</li>
+<li><p>修改/etc/sysconfig/ntpd文件</p>
+<p>让硬件时间与系统时间一起同步</p>
+<p><code>vim /etc/sysconfig/ntpd</code></p>
+<p>增加内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SYNC_HWCLOCK=yes</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重新启动ntpd服务</p>
+<p><code>service ntpd status</code></p>
+<p>ntpd 已停</p>
+<p><code>service ntpd start</code></p>
+<p>ntpd 启动</p>
+</li>
+<li><p>设置ntpd服务开机启动</p>
+<p><code>chkconfig ntpd on</code></p>
+</li>
+</ol>
+</li>
+<li><p>其他服务器配置：</p>
+<ol>
+<li><p>在其他服务器上配置10分钟与时间服务器同步一次</p>
+<p><code>crontab -e</code></p>
+<p>内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/10 * * * * /usr/sbin/ntpdate hadoop102</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改任意机器时间</p>
+<p><code>date -s &quot;2019-10-16 21:21:21&quot;</code></p>
+</li>
+<li><p>十分钟后查看机器是否与时间服务器同步</p>
+<p><code>date</code></p>
+<p>测试的时候可以调整为1分钟看效果。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>jps发现没进程，但是重启提示已经开启，原因是linux根目录下/tmp目录中存在启动的进程临时文件，将集群相关进程删除，再重新启动集群。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/07/Hadoop/05_Hadoop_%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84/" rel="next" title="05_Hadoop_目录结构">
+                <i class="fa fa-chevron-left"></i> 05_Hadoop_目录结构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/16/Hadoop/07_Hadoop_%E7%BC%96%E8%AF%91%E6%BA%90%E7%A0%81/" rel="prev" title="07_Hadoop_编译源码">
+                07_Hadoop_编译源码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="tomxwd" />
+            
+              <p class="site-author-name" itemprop="name">tomxwd</p>
+              <p class="site-description motion-element" itemprop="description">tomxwd</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">478</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/tomxwd" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#06-Hadoop-运行模式"><span class="nav-number">1.</span> <span class="nav-text">06_Hadoop_运行模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#本地运行模式"><span class="nav-number">1.1.</span> <span class="nav-text">本地运行模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#官方Grep案例"><span class="nav-number">1.1.1.</span> <span class="nav-text">官方Grep案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#官方WordCount案例"><span class="nav-number">1.1.2.</span> <span class="nav-text">官方WordCount案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#伪分布式模式"><span class="nav-number">1.2.</span> <span class="nav-text">伪分布式模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#启动HDFS并运行MapReduce程序"><span class="nav-number">1.2.1.</span> <span class="nav-text">启动HDFS并运行MapReduce程序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NameNode格式化注意事项"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">NameNode格式化注意事项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看日志"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">查看日志</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动YARN并运行MapReduce程序"><span class="nav-number">1.2.2.</span> <span class="nav-text">启动YARN并运行MapReduce程序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置历史服务器"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">配置历史服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置日志的聚集"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">配置日志的聚集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置文件说明"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">配置文件说明</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完全分布式"><span class="nav-number">1.3.</span> <span class="nav-text">完全分布式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机准备"><span class="nav-number">1.3.1.</span> <span class="nav-text">虚拟机准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写集群分发脚本xsync"><span class="nav-number">1.3.2.</span> <span class="nav-text">编写集群分发脚本xsync</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群配置"><span class="nav-number">1.3.3.</span> <span class="nav-text">集群配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群单点启动"><span class="nav-number">1.3.4.</span> <span class="nav-text">集群单点启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置SSH无密登录配置"><span class="nav-number">1.3.5.</span> <span class="nav-text">配置SSH无密登录配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#群起集群"><span class="nav-number">1.3.6.</span> <span class="nav-text">群起集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群启动-停止方式总结"><span class="nav-number">1.3.7.</span> <span class="nav-text">集群启动/停止方式总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群时间同步（root用户操作）"><span class="nav-number">1.3.8.</span> <span class="nav-text">集群时间同步（root用户操作）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见问题"><span class="nav-number">1.4.</span> <span class="nav-text">常见问题</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
