@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="tomxwd.blog" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="01_Log4j配置详解rootLogger根配置log4j.rootLogger = [level],appenderName,appenderName,…… 例如： log4j.rootLogger = INFO,Console,File 把info即以上的等级信息输出到控制台以及指定文件中去。 log4j日志等级 OFF FATAL ERROR WARN INFO DEBUG ALL  lo">
+<meta name="keywords" content="Java,Log4j">
+<meta property="og:type" content="article">
+<meta property="og:title" content="01_Log4j配置详解">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;09&#x2F;21&#x2F;Log4j&#x2F;01_Log4j%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="01_Log4j配置详解rootLogger根配置log4j.rootLogger = [level],appenderName,appenderName,…… 例如： log4j.rootLogger = INFO,Console,File 把info即以上的等级信息输出到控制台以及指定文件中去。 log4j日志等级 OFF FATAL ERROR WARN INFO DEBUG ALL  lo">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-16T09:59:16.352Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://www.blog.tomxwd.com/2019/09/21/Log4j/01_Log4j%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>01_Log4j配置详解 | tomxwd.blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/tomxwd" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/09/21/Log4j/01_Log4j%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="tomxwd">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          01_Log4j配置详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-09-21 18:46:40" itemprop="dateCreated datePublished" datetime="2019-09-21T18:46:40+08:00">2019-09-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-11-16 17:59:16" itemprop="dateModified" datetime="2019-11-16T17:59:16+08:00">2019-11-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Log4j/" itemprop="url" rel="index">
+                    <span itemprop="name">Log4j</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="01-Log4j配置详解"><a href="#01-Log4j配置详解" class="headerlink" title="01_Log4j配置详解"></a>01_Log4j配置详解</h1><h2 id="rootLogger根配置"><a href="#rootLogger根配置" class="headerlink" title="rootLogger根配置"></a>rootLogger根配置</h2><p>log4j.rootLogger = [level],appenderName,appenderName,……</p>
+<p>例如：</p>
+<p>log4j.rootLogger = INFO,Console,File</p>
+<p>把info即以上的等级信息输出到控制台以及指定文件中去。</p>
+<h2 id="log4j日志等级"><a href="#log4j日志等级" class="headerlink" title="log4j日志等级"></a>log4j日志等级</h2><ul>
+<li>OFF</li>
+<li>FATAL</li>
+<li>ERROR</li>
+<li>WARN</li>
+<li>INFO</li>
+<li>DEBUG</li>
+<li>ALL</li>
+</ul>
+<h2 id="log4j-appender输出类型配置"><a href="#log4j-appender输出类型配置" class="headerlink" title="log4j appender输出类型配置"></a>log4j appender输出类型配置</h2><ol>
+<li>org.apache.log4j.ConsoleAppender（控制台）</li>
+<li>org.apache.log4j.FileAppender（指定文件）<ul>
+<li>File：指定输出文件地址</li>
+</ul>
+</li>
+<li>org.apache.log4j.DailyRollingFileAppender（每天产生一个日志文件）</li>
+<li>org.apache.log4j.RollingFileAppender（文件大小达到指定尺寸的时候产生一个新的文件）<ul>
+<li>MaxFileSize：指定日志文件的最大尺寸</li>
+<li>MaxBackupIndex是日志文件的个数，如果超过了就覆盖，也是考虑到磁盘的容量问题</li>
+</ul>
+</li>
+<li>org.apache.log4j.WriterAppender（将日志信息以流格式发送到任意指定地方）</li>
+</ol>
+<p>一般使用1、3、4，这三种来开发。</p>
+<h2 id="log4j-layout日志信息格式"><a href="#log4j-layout日志信息格式" class="headerlink" title="log4j layout日志信息格式"></a>log4j layout日志信息格式</h2><ol>
+<li>org.apache.log4j.HTMLLayout（以HTML表格形式布局）</li>
+<li><strong>org.apache.log4j.PatternLayout（可以灵活的指定布局模式）</strong>【一般都是用这个】</li>
+<li>org.apache.log4j.SimpleLayout（包含日志信息的级别和信息字符串）</li>
+<li>org.apache.log4j.TTCCLayout（包含日志产生的时间、线程、类别等信息）</li>
+</ol>
+<p>PatternLayout：</p>
+<p>有个ConversionPattern属性，灵活配置输出属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%m</td>
+<td>输出代码中指定的信息</td>
+</tr>
+<tr>
+<td>%M</td>
+<td>输出打印该条日志的方法名</td>
+</tr>
+<tr>
+<td>%p</td>
+<td>输出优先级，即DEBUG、INFO、WARN、ERROR、FATAL</td>
+</tr>
+<tr>
+<td>%r</td>
+<td>输出自应用启动到输出该log信息耗费的毫秒数</td>
+</tr>
+<tr>
+<td>%c</td>
+<td>输出所属的类目，通常就是所在类的全名</td>
+</tr>
+<tr>
+<td>%t</td>
+<td>输出产生该日志事件的线程名</td>
+</tr>
+<tr>
+<td>%n</td>
+<td>输出一个回车换行符，Windows平台为”rn”，Unix平台为”n”</td>
+</tr>
+<tr>
+<td>%d</td>
+<td>输出日志时间点的日期或事件，默认格式为ISO8601，也可以在后面指定格式<br />比如：%d{yyyy-MM-dd HH:mm:ss,SSS}，输出类似：2019-09-21 20:10:28,578;</td>
+</tr>
+<tr>
+<td>%l</td>
+<td>输出日志事件的发生位置，及在代码中的行数</td>
+</tr>
+</tbody></table>
+<p>在%之后加上-5，即是指定为占用多少个位置，比如%-5p，那么INFO也会占5个位置，保持跟其他的对齐</p>
+<h2 id="log4j-Threshold属性指定输出等级"><a href="#log4j-Threshold属性指定输出等级" class="headerlink" title="log4j Threshold属性指定输出等级"></a>log4j Threshold属性指定输出等级</h2><p>有时候我们需要把一些报错ERROR日志单独存到指定文件，这时候，Threshold属性就派上用场了;</p>
+<p>Threshold属性可以指定日志登记</p>
+<p>Log4j根据日志信息的重要程度，分OFF、FATAL、ERROR、WARN、INFO、DEBUG、ALL</p>
+<p>比如我们指定某个appender的Threshold为WARN，那么这个appender输出的日志信息就是WARN以及以上的级别信息。</p>
+<p>假如我们指定的是ERROR，那这个就输出ERROR或者FATAL日志信息；</p>
+<p>当然这里有个前提，就是rootLogger里配置的level小于这里的Threshold等级，否则无效，还是按照总的rootLogger里的level来输出，一般我们实际使用的话，rootLogger里配置DEBUG，然后某个文件专门存储ERROR日志，就配置Threshold为ERROR，这个就是我们的最佳实践。</p>
+<h2 id="log4j-Append属性指定是否追加内容"><a href="#log4j-Append属性指定是否追加内容" class="headerlink" title="log4j Append属性指定是否追加内容"></a>log4j Append属性指定是否追加内容</h2><p>默认是追加到文件后面的，Append属性默认为true</p>
+<p>假如我们需要覆盖前面的内容就需要改为false</p>
+<p>log4j.appender.FIle.Append=false</p>
+<p>一般默认即可，不能对日志文件进行覆盖</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/Log4j/" rel="tag"># Log4j</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/09/15/jQuery/01_jQuery_%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" rel="next" title="01_jQuery_基本使用">
+                  <i class="fa fa-chevron-left"></i> 01_jQuery_基本使用
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/09/21/Dubbo/13_Dubbo_%E9%85%8D%E7%BD%AE_dubbo.properties&%E5%B1%9E%E6%80%A7%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F/" rel="prev" title="13_Dubbo_配置_dubbo.properties&属性加载顺序">
+                  13_Dubbo_配置_dubbo.properties&属性加载顺序 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#01-Log4j配置详解"><span class="nav-number">1.</span> <span class="nav-text">01_Log4j配置详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rootLogger根配置"><span class="nav-number">1.1.</span> <span class="nav-text">rootLogger根配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#log4j日志等级"><span class="nav-number">1.2.</span> <span class="nav-text">log4j日志等级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#log4j-appender输出类型配置"><span class="nav-number">1.3.</span> <span class="nav-text">log4j appender输出类型配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#log4j-layout日志信息格式"><span class="nav-number">1.4.</span> <span class="nav-text">log4j layout日志信息格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#log4j-Threshold属性指定输出等级"><span class="nav-number">1.5.</span> <span class="nav-text">log4j Threshold属性指定输出等级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#log4j-Append属性指定是否追加内容"><span class="nav-number">1.6.</span> <span class="nav-text">log4j Append属性指定是否追加内容</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="tomxwd"
+      src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+  <p class="site-author-name" itemprop="name">tomxwd</p>
+  <div class="site-description" itemprop="description">tomxwd</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">435</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/tomxwd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;tomxwd" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+  <div class="beian"><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备18158552号-1 </a>
+      <img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/%E5%A4%87%E6%A1%88%E5%9B%BE%E6%A0%87.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18158552" rel="noopener" target="_blank">1213123 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-bug"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

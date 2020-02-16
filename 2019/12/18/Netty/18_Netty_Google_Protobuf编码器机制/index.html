@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="tomxwd.blog" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="18_Netty_Google_Protobuf编码器机制编码和解码的基本介绍 编写网络应用程序的时候，因为数据在网络中传输的都是二进制字节码数据，在发送数据的时候就需要编码，接收数据的时候就需要解码；  codec（编解码器）的组成部分有两个：  encoder（编码器） encoder负责把业务数据转换成字节码数据；  decoder（解码器） decoder负责把字节码数据转换成业务数据；">
+<meta name="keywords" content="Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="18_Netty_Google_Protobuf编码器机制">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;12&#x2F;18&#x2F;Netty&#x2F;18_Netty_Google_Protobuf%E7%BC%96%E7%A0%81%E5%99%A8%E6%9C%BA%E5%88%B6&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="18_Netty_Google_Protobuf编码器机制编码和解码的基本介绍 编写网络应用程序的时候，因为数据在网络中传输的都是二进制字节码数据，在发送数据的时候就需要编码，接收数据的时候就需要解码；  codec（编解码器）的组成部分有两个：  encoder（编码器） encoder负责把业务数据转换成字节码数据；  decoder（解码器） decoder负责把字节码数据转换成业务数据；">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;12&#x2F;18&#x2F;Netty&#x2F;18_Netty_Google_Protobuf%E7%BC%96%E7%A0%81%E5%99%A8%E6%9C%BA%E5%88%B6&#x2F;18_Netty_Google_Protobuf%E7%BC%96%E7%A0%81%E5%99%A8%E6%9C%BA%E5%88%B6&#x2F;image-20191222181139733.png">
+<meta property="og:updated_time" content="2019-12-22T15:12:41.234Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;12&#x2F;18&#x2F;Netty&#x2F;18_Netty_Google_Protobuf%E7%BC%96%E7%A0%81%E5%99%A8%E6%9C%BA%E5%88%B6&#x2F;18_Netty_Google_Protobuf%E7%BC%96%E7%A0%81%E5%99%A8%E6%9C%BA%E5%88%B6&#x2F;image-20191222181139733.png">
+
+<link rel="canonical" href="http://www.blog.tomxwd.com/2019/12/18/Netty/18_Netty_Google_Protobuf%E7%BC%96%E7%A0%81%E5%99%A8%E6%9C%BA%E5%88%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>18_Netty_Google_Protobuf编码器机制 | tomxwd.blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/tomxwd" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/12/18/Netty/18_Netty_Google_Protobuf%E7%BC%96%E7%A0%81%E5%99%A8%E6%9C%BA%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="tomxwd">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          18_Netty_Google_Protobuf编码器机制
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-18 22:26:02" itemprop="dateCreated datePublished" datetime="2019-12-18T22:26:02+08:00">2019-12-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-22 23:12:41" itemprop="dateModified" datetime="2019-12-22T23:12:41+08:00">2019-12-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Netty/" itemprop="url" rel="index">
+                    <span itemprop="name">Netty</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="18-Netty-Google-Protobuf编码器机制"><a href="#18-Netty-Google-Protobuf编码器机制" class="headerlink" title="18_Netty_Google_Protobuf编码器机制"></a>18_Netty_Google_Protobuf编码器机制</h1><h2 id="编码和解码的基本介绍"><a href="#编码和解码的基本介绍" class="headerlink" title="编码和解码的基本介绍"></a>编码和解码的基本介绍</h2><ol>
+<li><p>编写网络应用程序的时候，因为数据在网络中传输的都是二进制字节码数据，在发送数据的时候就需要编码，接收数据的时候就需要解码；</p>
+</li>
+<li><p>codec（编解码器）的组成部分有两个：</p>
+<ul>
+<li><p>encoder（编码器）</p>
+<p>encoder负责把<strong>业务数据转换成字节码数据</strong>；</p>
+</li>
+<li><p>decoder（解码器）</p>
+<p>decoder负责把<strong>字节码数据转换成业务数据</strong>；</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="Netty本身的编码解码的机制与问题分析"><a href="#Netty本身的编码解码的机制与问题分析" class="headerlink" title="Netty本身的编码解码的机制与问题分析"></a>Netty本身的编码解码的机制与问题分析</h2><ol>
+<li>Netty自身提供了一些codec（编解码器）</li>
+<li>Netty提供的编码器：<ul>
+<li>StringEncoder，对字符串数据进行编码</li>
+<li>ObjectEncoder，对Java对象进行编码</li>
+<li>……</li>
+</ul>
+</li>
+<li>Netty提供的解码器：<ul>
+<li>StringDecoder，对字符串数据进行解码</li>
+<li>ObjectDecoder，对Java对象进行解码</li>
+<li>……</li>
+</ul>
+</li>
+<li>Netty本身自带的ObjectDecoder和ObjectEncoder可以用来实现pojo对象或各种业务对象的编码和解码，底层使用的仍然是Java序列化技术，而Java序列化技术本身效率就不高，存在如下问题：<ul>
+<li><strong>无法跨语言</strong></li>
+<li>序列化后的体积太大，是二进制编码的5倍多</li>
+<li>序列化性能太差</li>
+</ul>
+</li>
+</ol>
+<p>所以使用Google的Protobuf作为序列化技术</p>
+<h2 id="Protobuf"><a href="#Protobuf" class="headerlink" title="Protobuf"></a>Protobuf</h2><h3 id="Protobuf基本介绍和使用示意图"><a href="#Protobuf基本介绍和使用示意图" class="headerlink" title="Protobuf基本介绍和使用示意图"></a>Protobuf基本介绍和使用示意图</h3><ol>
+<li><p>Protobuf是Google发布的开源项目，全称Google Protocol Buffers，是一种轻便高效的结构化数据存储格式，可以用于结构化数据串行化，或者说序列化。它很适合做数据存储或<strong>RPC数据交换格式</strong>；</p>
+<p>目前很多公司http+json–&gt;TCP+protobuf</p>
+</li>
+<li><p><a href="https://developers.google.com/protocol-buffers/docs/proto" target="_blank" rel="noopener">参考文档</a></p>
+</li>
+<li><p>Protobuf是以message的方式来管理数据的；</p>
+</li>
+<li><p>支持跨平台、<strong>跨语言</strong>（支持目前绝大多数语言，例如C++、C#、Java、Python等）；</p>
+</li>
+<li><p>高性能，高可靠性</p>
+</li>
+<li><p>使用Protobuf编译器能自动生成代码，Protobuf是将类的定义使用.proto文件进行描述。【说明：在idea中编写.proto文件时，会自动提示是够下载Protobuf编写插件，可以让语法高亮；】</p>
+</li>
+<li><p>然后通过protoc.exe编译器根据.proto自动生成.java文件</p>
+</li>
+<li><p>protobuf使用示意图；</p>
+<p><img src="18_Netty_Google_Protobuf%E7%BC%96%E7%A0%81%E5%99%A8%E6%9C%BA%E5%88%B6/image-20191222181139733.png" alt="image-20191222181139733"></p>
+</li>
+</ol>
+<h3 id="Protobuf快速入门实例1"><a href="#Protobuf快速入门实例1" class="headerlink" title="Protobuf快速入门实例1"></a>Protobuf快速入门实例1</h3><p>编写程序，使用Protobuf完成如下功能：</p>
+<ol>
+<li>客户端可以发送一个Student Pojo 对象到服务器（通过Protobuf编码）</li>
+<li>服务器能接收Student Pojo对象，并显示信息（通过Protobuf编码）</li>
+</ol>
+<p><strong><a href="https://github.com/protocolbuffers/protobuf/releases/" target="_blank" rel="noopener">ProtobufGithub下载地址</a></strong></p>
+<p>需要下载两个，一个是java的，一个是win32的；</p>
+<p>步骤：</p>
+<ol>
+<li>在pom.xml文件中引入Protobuf依赖</li>
+<li>编写proto文件Student.proto</li>
+<li>生成.java文件简单点的形式是，复制Student.proto到protoc-3.6.1-win32解压后的bin目录下，与protoc.exe同级，然后命令行中输入<code>protoc.exe --java_out=. Student.proto</code>生成StudentPOJO.java文件<ul>
+<li>或者就复制到项目里运行生成；</li>
+</ul>
+</li>
+<li>复制StudentPOJO.java到项目中；</li>
+<li>客户端发送对象到服务器，服务器接收</li>
+<li>客户端需要添加一个ProtobufEncode处理器，而服务端则添加ProtobufDecode处理器，并指定类型；</li>
+</ol>
+<p>Student.proto文件：</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">syntax = <span class="string">"proto3"</span>; <span class="comment">// 版本</span></span><br><span class="line"><span class="keyword">option</span> java_outer_classname = <span class="string">"StudentPOJO"</span>; <span class="comment">// 生成的外部类名，同时也是文件名</span></span><br><span class="line"><span class="comment">// protobuf是以message管理数据</span></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Student</span> </span>&#123;  <span class="comment">// 会在外部类生成一个内部类Student，他是真正的发送POJO对象</span></span><br><span class="line">    <span class="built_in">int32</span> id = <span class="number">1</span>;  <span class="comment">// Student类中有一个属性名字为id，类型为int32（protobuf类型）1不代表值，表示属性的序号</span></span><br><span class="line">    <span class="built_in">string</span> name = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>客户端：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="comment">// 客户端需要一个事件循环组</span></span><br><span class="line">        EventLoopGroup eventExecutors = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建客户端启动对象</span></span><br><span class="line">            <span class="comment">// 注意客户端使用的是BootStrap，不是ServerBootStrap</span></span><br><span class="line">            Bootstrap bootstrap = <span class="keyword">new</span> Bootstrap();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 设置相关参数</span></span><br><span class="line">            bootstrap.group(eventExecutors)<span class="comment">// 设置线程组</span></span><br><span class="line">                    .channel(NioSocketChannel<span class="class">.<span class="keyword">class</span>)// 设置客户端实现类</span></span><br><span class="line"><span class="class">                    .<span class="title">handler</span>(<span class="title">new</span> <span class="title">ChannelInitializer</span>&lt;<span class="title">SocketChannel</span>&gt;() </span>&#123;</span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                            ch.pipeline()</span><br><span class="line">                                    .addLast(<span class="string">"encoder"</span>, <span class="keyword">new</span> ProtobufEncoder())<span class="comment">//在pipeline中加入ProtobufEncoder处理器</span></span><br><span class="line">                                    .addLast(<span class="keyword">new</span> NettyClientHandler());<span class="comment">// 加入自己的处理器</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"客户端 is ok......"</span>);</span><br><span class="line">            <span class="comment">// 启动客户端去连接服务器端</span></span><br><span class="line">            <span class="comment">// 关于ChannelFuture，设计到hetty的异步模型</span></span><br><span class="line">            ChannelFuture channelFuture = bootstrap.connect(<span class="string">"127.0.0.1"</span>, <span class="number">6688</span>).sync();</span><br><span class="line">            <span class="comment">// 给关闭通道进行监听</span></span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            eventExecutors.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>客户端处理器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyClientHandler</span> <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当通道就绪的时候就触发该方法</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ctx</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 发送一个Student对象到服务器</span></span><br><span class="line">        StudentPOJO.Student student = StudentPOJO.Student.newBuilder().setId(<span class="number">4</span>).setName(<span class="string">"豹子头林冲"</span>).build();</span><br><span class="line">        ctx.writeAndFlush(student);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当通道有读取事件的时候，会触发该方法</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ctx</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> msg</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ByteBuf buf = (ByteBuf) msg;</span><br><span class="line">        System.out.println(<span class="string">"服务器回复的消息："</span> + buf.toString(CharsetUtil.UTF_8));</span><br><span class="line">        System.out.println(<span class="string">"服务器的地址："</span>+ctx.channel().remoteAddress());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"客户端异常发生"</span>);</span><br><span class="line">        cause.printStackTrace();</span><br><span class="line">        ctx.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>服务端：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyServer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">            说明：</span></span><br><span class="line"><span class="comment">            1. 创建两个线程组BossGroup以及WorkGroup</span></span><br><span class="line"><span class="comment">            2. BossGroup只是处理连接请求，真正与客户端的业务处理，会交给WorkerGroup完成</span></span><br><span class="line"><span class="comment">            3. 两个都是无限循环</span></span><br><span class="line"><span class="comment">            4. BossGroup和WorkerGroup含有的子线程（NioEventLoop）的个数，默认是CPU的核数*2</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">// 创建BossGroup 以及 WorkGroup</span></span><br><span class="line">        EventLoopGroup bossGroup = <span class="keyword">new</span> NioEventLoopGroup(<span class="number">1</span>);</span><br><span class="line">        EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建服务器端的启动对象，配置参数</span></span><br><span class="line">            ServerBootstrap bootstrap = <span class="keyword">new</span> ServerBootstrap();</span><br><span class="line">            <span class="comment">// 使用链式编程的方式进行设置</span></span><br><span class="line">            bootstrap.group(bossGroup, workerGroup)          <span class="comment">// 设置两个线程组</span></span><br><span class="line">                    .channel(NioServerSocketChannel<span class="class">.<span class="keyword">class</span>)  // 使用<span class="title">NioServerSocketChannel</span>作为服务器的通道实现</span></span><br><span class="line"><span class="class">                    .<span class="title">option</span>(<span class="title">ChannelOption</span>.<span class="title">SO_BACKLOG</span>, 128)//设置线程队列等待连接个数</span></span><br><span class="line"><span class="class">                    .<span class="title">childOption</span>(<span class="title">ChannelOption</span>.<span class="title">SO_KEEPALIVE</span>, <span class="title">true</span>)// 设置保持活动连接状态</span></span><br><span class="line"><span class="class">                    .<span class="title">childHandler</span>(<span class="title">new</span> <span class="title">ChannelInitializer</span>&lt;<span class="title">SocketChannel</span>&gt;() </span>&#123; <span class="comment">// 创建一个通道初始化对象（匿名对象）</span></span><br><span class="line">                        <span class="comment">// 向workerGroup关联的pipeline设置处理器</span></span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                            System.out.println(<span class="string">"客户端SocketChannel的hashCode："</span> + ch.hashCode());<span class="comment">// 可以使用一个集合管理所有的Channel，在推送消息的时候，可以将业务加入到各个Channel对应的NioEventLoop的taskQueue或者scheduleTaskQueue</span></span><br><span class="line">                            ch.pipeline()</span><br><span class="line">                                    .addLast(<span class="string">"decoder"</span>,<span class="keyword">new</span> ProtobufDecoder(StudentPOJO.Student.getDefaultInstance()))<span class="comment">//在pipeline中加入ProtobufDecoder处理器 这里需要指定对哪种对象进行解码</span></span><br><span class="line">                                    .addLast(<span class="keyword">new</span> NettyServerHandler());<span class="comment">//添加处理器到pipeline尾部</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);<span class="comment">//给workerGroup的EventLoop对应的管道设置处理器</span></span><br><span class="line">            System.out.println(<span class="string">"==============服务器 is ready=============="</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 绑定一个端口并同步，生成了一个ChannelFuture对象</span></span><br><span class="line">            <span class="comment">// 启动了服务器并绑定端口</span></span><br><span class="line">            ChannelFuture cf = bootstrap.bind(<span class="number">6688</span>).sync();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 给cf注册监听器，监控我们关心的事件</span></span><br><span class="line">            cf.addListener(future -&gt; &#123;</span><br><span class="line">                <span class="keyword">if</span>(cf.isSuccess())&#123;</span><br><span class="line">                    System.out.println(<span class="string">"监听端口6688成功！"</span>);</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    System.out.println(<span class="string">"监听端口6688失败！"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 对关闭通道进行监听</span></span><br><span class="line">            cf.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            bossGroup.shutdownGracefully();</span><br><span class="line">            workerGroup.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>服务端处理器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">StudentPOJO</span>.<span class="title">Student</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, StudentPOJO.Student student)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"客户端发送的数据 id="</span> + student.getId() + <span class="string">" 名字="</span> + student.getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 读取数据事件（这里我们可以读取客户端发送的数据）</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ctx ChannelHandlerContext：上下文对象，含有管道pipeline，通道channel，地址</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> msg Object：就是客户端发送的数据，默认是Object类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="comment">//    @Override</span></span><br><span class="line"><span class="comment">//    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception &#123;</span></span><br><span class="line"><span class="comment">//        // 读取从客户端发送的StudentPOJO.Student</span></span><br><span class="line"><span class="comment">//        StudentPOJO.Student student = (StudentPOJO.Student) msg;</span></span><br><span class="line"><span class="comment">//        System.out.println("客户端发送的数据 id=" + student.getId() + " 名字=" + student.getName());</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数据读取完毕，触发</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ctx</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelReadComplete</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// write+flush 将数据写入到缓存，并刷新</span></span><br><span class="line">        <span class="comment">// 一般来讲，我们对发送的数据进行编码</span></span><br><span class="line">        ctx.writeAndFlush(Unpooled.copiedBuffer(<span class="string">"hello,客户端"</span>, CharsetUtil.UTF_8));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 处理异常，一般是需要关闭通道</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ctx</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cause</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ctx.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Protobuf快速入门案例2"><a href="#Protobuf快速入门案例2" class="headerlink" title="Protobuf快速入门案例2"></a>Protobuf快速入门案例2</h3><ol>
+<li>客户端可以随机发送StudentPOJO/WorkerPOJO对象到服务器（通过Protobuf编码）</li>
+<li>服务端能接收StudentPOJO/WorkerPOJO对象（需要判断是哪种类型），并显示消息（通过Protobuf解码）</li>
+</ol>
+<p>MyMessage.proto：</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">syntax = <span class="string">"proto3"</span>; <span class="comment">// 版本</span></span><br><span class="line"><span class="keyword">option</span> optimize_for = SPEED; <span class="comment">// 快速解析</span></span><br><span class="line"><span class="keyword">option</span> java_package = <span class="string">"top.tomxwd.netty.codec2"</span>; <span class="comment">// 指定生成到哪个包下</span></span><br><span class="line"><span class="keyword">option</span> java_outer_classname = <span class="string">"MyDataInfo"</span>; <span class="comment">//外部类名称</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// protobuf可以使用message管理其他的message</span></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">MyMessage</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 定义一个枚举类型</span></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">DataType</span> </span>&#123;</span><br><span class="line">        StudentType = <span class="number">0</span>; <span class="comment">// 这里编号要从0开始</span></span><br><span class="line">        WorkerType = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用data_type来标识传的是哪一个枚举类型</span></span><br><span class="line">    DataType data_type = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 表示每次枚举类型最多只能出现其中的一个，节省空间</span></span><br><span class="line">    <span class="keyword">oneof</span> dataBody &#123;</span><br><span class="line">        Student student = <span class="number">2</span>;</span><br><span class="line">        Worker worker = <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Student</span> </span>&#123;  <span class="comment">// 会在外部类生成一个内部类Student，他是真正的发送POJO对象</span></span><br><span class="line">    <span class="built_in">int32</span> id = <span class="number">1</span>;  <span class="comment">// Student类中有一个属性名字为id，类型为int32（protobuf类型）1不代表值，表示属性的序号</span></span><br><span class="line">    <span class="built_in">string</span> name = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Worker</span> </span>&#123;</span><br><span class="line">    <span class="built_in">string</span> name = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">int32</span> age = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>客户端：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="comment">// 客户端需要一个事件循环组</span></span><br><span class="line">        EventLoopGroup eventExecutors = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建客户端启动对象</span></span><br><span class="line">            <span class="comment">// 注意客户端使用的是BootStrap，不是ServerBootStrap</span></span><br><span class="line">            Bootstrap bootstrap = <span class="keyword">new</span> Bootstrap();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 设置相关参数</span></span><br><span class="line">            bootstrap.group(eventExecutors)<span class="comment">// 设置线程组</span></span><br><span class="line">                    .channel(NioSocketChannel<span class="class">.<span class="keyword">class</span>)// 设置客户端实现类</span></span><br><span class="line"><span class="class">                    .<span class="title">handler</span>(<span class="title">new</span> <span class="title">ChannelInitializer</span>&lt;<span class="title">SocketChannel</span>&gt;() </span>&#123;</span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                            ch.pipeline()</span><br><span class="line">                                    .addLast(<span class="string">"encoder"</span>, <span class="keyword">new</span> ProtobufEncoder())<span class="comment">//在pipeline中加入ProtobufEncoder处理器</span></span><br><span class="line">                                    .addLast(<span class="keyword">new</span> NettyClientHandler());<span class="comment">// 加入自己的处理器</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"客户端 is ok......"</span>);</span><br><span class="line">            <span class="comment">// 启动客户端去连接服务器端</span></span><br><span class="line">            <span class="comment">// 关于ChannelFuture，设计到hetty的异步模型</span></span><br><span class="line">            ChannelFuture channelFuture = bootstrap.connect(<span class="string">"127.0.0.1"</span>, <span class="number">6688</span>).sync();</span><br><span class="line">            <span class="comment">// 给关闭通道进行监听</span></span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            eventExecutors.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>客户端处理器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyClientHandler</span> <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当通道就绪的时候就触发该方法</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ctx</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 随机发送Student或者Worker对象</span></span><br><span class="line">        <span class="keyword">int</span> random = <span class="keyword">new</span> Random().nextInt(<span class="number">3</span>);</span><br><span class="line">        MyDataInfo.MyMessage myMessage = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0</span> == random) &#123;</span><br><span class="line">            <span class="comment">// 发送Student</span></span><br><span class="line">            myMessage = MyDataInfo.MyMessage.newBuilder().setDataType(MyDataInfo.MyMessage.DataType.StudentType).setStudent(MyDataInfo.Student.newBuilder().setId(<span class="number">5</span>).setName(<span class="string">"玉麒麟 卢俊义"</span>).build()).build();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 发送Worker</span></span><br><span class="line">            myMessage = MyDataInfo.MyMessage.newBuilder().setDataType(MyDataInfo.MyMessage.DataType.WorkerType).setWorker(MyDataInfo.Worker.newBuilder().setAge(<span class="number">20</span>).setName(<span class="string">"老李"</span>).build()).build();</span><br><span class="line">        &#125;</span><br><span class="line">        ctx.writeAndFlush(myMessage);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当通道有读取事件的时候，会触发该方法</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ctx</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> msg</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ByteBuf buf = (ByteBuf) msg;</span><br><span class="line">        System.out.println(<span class="string">"服务器回复的消息："</span> + buf.toString(CharsetUtil.UTF_8));</span><br><span class="line">        System.out.println(<span class="string">"服务器的地址："</span> + ctx.channel().remoteAddress());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"客户端异常发生"</span>);</span><br><span class="line">        cause.printStackTrace();</span><br><span class="line">        ctx.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>服务器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyServer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">            说明：</span></span><br><span class="line"><span class="comment">            1. 创建两个线程组BossGroup以及WorkGroup</span></span><br><span class="line"><span class="comment">            2. BossGroup只是处理连接请求，真正与客户端的业务处理，会交给WorkerGroup完成</span></span><br><span class="line"><span class="comment">            3. 两个都是无限循环</span></span><br><span class="line"><span class="comment">            4. BossGroup和WorkerGroup含有的子线程（NioEventLoop）的个数，默认是CPU的核数*2</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">// 创建BossGroup 以及 WorkGroup</span></span><br><span class="line">        EventLoopGroup bossGroup = <span class="keyword">new</span> NioEventLoopGroup(<span class="number">1</span>);</span><br><span class="line">        EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建服务器端的启动对象，配置参数</span></span><br><span class="line">            ServerBootstrap bootstrap = <span class="keyword">new</span> ServerBootstrap();</span><br><span class="line">            <span class="comment">// 使用链式编程的方式进行设置</span></span><br><span class="line">            bootstrap.group(bossGroup, workerGroup)          <span class="comment">// 设置两个线程组</span></span><br><span class="line">                    .channel(NioServerSocketChannel<span class="class">.<span class="keyword">class</span>)  // 使用<span class="title">NioServerSocketChannel</span>作为服务器的通道实现</span></span><br><span class="line"><span class="class">                    .<span class="title">option</span>(<span class="title">ChannelOption</span>.<span class="title">SO_BACKLOG</span>, 128)//设置线程队列等待连接个数</span></span><br><span class="line"><span class="class">                    .<span class="title">childOption</span>(<span class="title">ChannelOption</span>.<span class="title">SO_KEEPALIVE</span>, <span class="title">true</span>)// 设置保持活动连接状态</span></span><br><span class="line"><span class="class">                    .<span class="title">childHandler</span>(<span class="title">new</span> <span class="title">ChannelInitializer</span>&lt;<span class="title">SocketChannel</span>&gt;() </span>&#123; <span class="comment">// 创建一个通道初始化对象（匿名对象）</span></span><br><span class="line">                        <span class="comment">// 向workerGroup关联的pipeline设置处理器</span></span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                            System.out.println(<span class="string">"客户端SocketChannel的hashCode："</span> + ch.hashCode());<span class="comment">// 可以使用一个集合管理所有的Channel，在推送消息的时候，可以将业务加入到各个Channel对应的NioEventLoop的taskQueue或者scheduleTaskQueue</span></span><br><span class="line">                            ch.pipeline()</span><br><span class="line">                                    .addLast(<span class="string">"decoder"</span>, <span class="keyword">new</span> ProtobufDecoder(MyDataInfo.MyMessage.getDefaultInstance()))<span class="comment">//在pipeline中加入ProtobufDecoder处理器 这里需要指定对哪种对象进行解码</span></span><br><span class="line">                                    .addLast(<span class="keyword">new</span> NettyServerHandler());<span class="comment">//添加处理器到pipeline尾部</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);<span class="comment">//给workerGroup的EventLoop对应的管道设置处理器</span></span><br><span class="line">            System.out.println(<span class="string">"==============服务器 is ready=============="</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 绑定一个端口并同步，生成了一个ChannelFuture对象</span></span><br><span class="line">            <span class="comment">// 启动了服务器并绑定端口</span></span><br><span class="line">            ChannelFuture cf = bootstrap.bind(<span class="number">6688</span>).sync();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 给cf注册监听器，监控我们关心的事件</span></span><br><span class="line">            cf.addListener(future -&gt; &#123;</span><br><span class="line">                <span class="keyword">if</span> (cf.isSuccess()) &#123;</span><br><span class="line">                    System.out.println(<span class="string">"监听端口6688成功！"</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    System.out.println(<span class="string">"监听端口6688失败！"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 对关闭通道进行监听</span></span><br><span class="line">            cf.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            bossGroup.shutdownGracefully();</span><br><span class="line">            workerGroup.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>服务器处理器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">MyDataInfo</span>.<span class="title">MyMessage</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, MyDataInfo.MyMessage msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 根据dataType来显示不同的信息</span></span><br><span class="line">        MyDataInfo.MyMessage.DataType dataType = msg.getDataType();</span><br><span class="line">        <span class="keyword">if</span> (dataType == MyDataInfo.MyMessage.DataType.StudentType) &#123;</span><br><span class="line">            MyDataInfo.Student student = msg.getStudent();</span><br><span class="line">            System.out.println(<span class="string">"学生id:"</span> + student.getId() + <span class="string">" 名字:"</span> + student.getName());</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dataType == MyDataInfo.MyMessage.DataType.WorkerType) &#123;</span><br><span class="line">            MyDataInfo.Worker worker = msg.getWorker();</span><br><span class="line">            System.out.println(<span class="string">"工人年龄:"</span> + worker.getAge() + <span class="string">" 名字:"</span> + worker.getName());</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">"传输的类型不正确"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 读取数据事件（这里我们可以读取客户端发送的数据）</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ctx ChannelHandlerContext：上下文对象，含有管道pipeline，通道channel，地址</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> msg Object：就是客户端发送的数据，默认是Object类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="comment">//    @Override</span></span><br><span class="line"><span class="comment">//    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception &#123;</span></span><br><span class="line"><span class="comment">//        // 读取从客户端发送的StudentPOJO.Student</span></span><br><span class="line"><span class="comment">//        StudentPOJO.Student student = (StudentPOJO.Student) msg;</span></span><br><span class="line"><span class="comment">//        System.out.println("客户端发送的数据 id=" + student.getId() + " 名字=" + student.getName());</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数据读取完毕，触发</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ctx</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelReadComplete</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// write+flush 将数据写入到缓存，并刷新</span></span><br><span class="line">        <span class="comment">// 一般来讲，我们对发送的数据进行编码</span></span><br><span class="line">        ctx.writeAndFlush(Unpooled.copiedBuffer(<span class="string">"hello,客户端"</span>, CharsetUtil.UTF_8));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 处理异常，一般是需要关闭通道</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> ctx</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cause</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ctx.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Netty/" rel="tag"># Netty</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/12/18/Netty/17_Netty_WebSocket%E9%95%BF%E8%BF%9E%E6%8E%A5%E5%BC%80%E5%8F%91/" rel="next" title="17_Netty_WebSocket长连接开发">
+                  <i class="fa fa-chevron-left"></i> 17_Netty_WebSocket长连接开发
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/12/23/Netty/19_Netty_Netty%E5%85%A5%E7%AB%99%E5%87%BA%E7%AB%99%E6%9C%BA%E5%88%B6/" rel="prev" title="19_Netty_Netty入站出站机制">
+                  19_Netty_Netty入站出站机制 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#18-Netty-Google-Protobuf编码器机制"><span class="nav-number">1.</span> <span class="nav-text">18_Netty_Google_Protobuf编码器机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编码和解码的基本介绍"><span class="nav-number">1.1.</span> <span class="nav-text">编码和解码的基本介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Netty本身的编码解码的机制与问题分析"><span class="nav-number">1.2.</span> <span class="nav-text">Netty本身的编码解码的机制与问题分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Protobuf"><span class="nav-number">1.3.</span> <span class="nav-text">Protobuf</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Protobuf基本介绍和使用示意图"><span class="nav-number">1.3.1.</span> <span class="nav-text">Protobuf基本介绍和使用示意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Protobuf快速入门实例1"><span class="nav-number">1.3.2.</span> <span class="nav-text">Protobuf快速入门实例1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Protobuf快速入门案例2"><span class="nav-number">1.3.3.</span> <span class="nav-text">Protobuf快速入门案例2</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="tomxwd"
+      src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+  <p class="site-author-name" itemprop="name">tomxwd</p>
+  <div class="site-description" itemprop="description">tomxwd</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">435</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/tomxwd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;tomxwd" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+  <div class="beian"><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备18158552号-1 </a>
+      <img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/%E5%A4%87%E6%A1%88%E5%9B%BE%E6%A0%87.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18158552" rel="noopener" target="_blank">1213123 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-bug"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

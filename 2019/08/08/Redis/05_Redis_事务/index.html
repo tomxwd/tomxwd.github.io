@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="tomxwd.blog" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="05_Reids_事务Redis事务是什么 可以一次执行多个命令，本质是一组命令的集合。一个事务中的所有命令都会序列化，按顺序地串行化执行，而不会被其他命令插入，不许加塞  官网    Redis事务能干嘛一个队列中，一次性、顺序性、排他性的执行一系列命令。 怎么用Redis事务  常用命令   序号 命令及描述    1 DISCARD  取消事务，放弃执行事务块内的所有命令。   2 EXEC">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="05_Reids_事务">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;08&#x2F;08&#x2F;Redis&#x2F;05_Redis_%E4%BA%8B%E5%8A%A1&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="05_Reids_事务Redis事务是什么 可以一次执行多个命令，本质是一组命令的集合。一个事务中的所有命令都会序列化，按顺序地串行化执行，而不会被其他命令插入，不许加塞  官网    Redis事务能干嘛一个队列中，一次性、顺序性、排他性的执行一系列命令。 怎么用Redis事务  常用命令   序号 命令及描述    1 DISCARD  取消事务，放弃执行事务块内的所有命令。   2 EXEC">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-4.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-5.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-6.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-7.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-9.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-10.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-11.png">
+<meta property="og:updated_time" content="2020-02-16T04:14:45.299Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;redis&#x2F;05_redis%E4%BA%8B%E5%8A%A1-1.png">
+
+<link rel="canonical" href="http://www.blog.tomxwd.com/2019/08/08/Redis/05_Redis_%E4%BA%8B%E5%8A%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>05_Reids_事务 | tomxwd.blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/tomxwd" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/08/08/Redis/05_Redis_%E4%BA%8B%E5%8A%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="tomxwd">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          05_Reids_事务
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-08-08 11:16:29" itemprop="dateCreated datePublished" datetime="2019-08-08T11:16:29+08:00">2019-08-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-16 12:14:45" itemprop="dateModified" datetime="2020-02-16T12:14:45+08:00">2020-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NoSQL/" itemprop="url" rel="index">
+                    <span itemprop="name">NoSQL</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NoSQL/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="05-Reids-事务"><a href="#05-Reids-事务" class="headerlink" title="05_Reids_事务"></a>05_Reids_事务</h1><h2 id="Redis事务是什么"><a href="#Redis事务是什么" class="headerlink" title="Redis事务是什么"></a>Redis事务是什么</h2><ul>
+<li><p>可以一次执行多个命令，本质是一组命令的集合。一个事务中的所有命令都会序列化，<strong>按顺序地串行化执行，而不会被其他命令插入，不许加塞</strong></p>
+</li>
+<li><p>官网</p>
+<p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/redis/05_redis%E4%BA%8B%E5%8A%A1-1.png" alt="05_redis事务-1"></p>
+</li>
+</ul>
+<h2 id="Redis事务能干嘛"><a href="#Redis事务能干嘛" class="headerlink" title="Redis事务能干嘛"></a>Redis事务能干嘛</h2><p>一个队列中，一次性、顺序性、排他性的执行一系列命令。</p>
+<h2 id="怎么用Redis事务"><a href="#怎么用Redis事务" class="headerlink" title="怎么用Redis事务"></a>怎么用Redis事务</h2><p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/redis/05_redis%E4%BA%8B%E5%8A%A1-2.png" alt="05_redis事务-2"></p>
+<p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/redis/05_redis%E4%BA%8B%E5%8A%A1-3.png" alt="05_redis事务-3"></p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">命令及描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left"><a href="https://www.runoob.com/redis/transactions-discard.html" target="_blank" rel="noopener">DISCARD</a>  取消事务，放弃执行事务块内的所有命令。</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left"><a href="https://www.runoob.com/redis/transactions-exec.html" target="_blank" rel="noopener">EXEC</a>  执行所有事务块内的命令。</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left"><a href="https://www.runoob.com/redis/transactions-multi.html" target="_blank" rel="noopener">MULTI</a>  标记一个事务块的开始。</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left"><a href="https://www.runoob.com/redis/transactions-unwatch.html" target="_blank" rel="noopener">UNWATCH</a>  取消 WATCH 命令对所有 key 的监视。</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left"><a href="https://www.runoob.com/redis/transactions-watch.html" target="_blank" rel="noopener">WATCH key [key …]</a>  监视一个(或多个) key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断。</td>
+</tr>
+</tbody></table>
+<h3 id="正常执行"><a href="#正常执行" class="headerlink" title="正常执行"></a>正常执行</h3><p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/redis/05_redis%E4%BA%8B%E5%8A%A1-4.png" alt="05_redis事务-4"></p>
+<h3 id="放弃事务"><a href="#放弃事务" class="headerlink" title="放弃事务"></a>放弃事务</h3><p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/redis/05_redis%E4%BA%8B%E5%8A%A1-5.png" alt="05_redis事务-5"></p>
+<h3 id="全体连坐"><a href="#全体连坐" class="headerlink" title="全体连坐"></a>全体连坐</h3><p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/redis/05_redis%E4%BA%8B%E5%8A%A1-6.png" alt="05_redis事务-6"></p>
+<h3 id="冤头债主"><a href="#冤头债主" class="headerlink" title="冤头债主"></a>冤头债主</h3><p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/redis/05_redis%E4%BA%8B%E5%8A%A1-7.png" alt="05_redis事务-7"></p>
+<h3 id="watch监控"><a href="#watch监控" class="headerlink" title="watch监控"></a>watch监控</h3><h4 id="悲观锁-乐观锁-CAS-Check-And-Set"><a href="#悲观锁-乐观锁-CAS-Check-And-Set" class="headerlink" title="悲观锁/乐观锁/CAS(Check And Set)"></a>悲观锁/乐观锁/CAS(Check And Set)</h4><ul>
+<li><p>悲观锁</p>
+<p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/redis/05_redis%E4%BA%8B%E5%8A%A1-8.png" alt="05_redis事务-8"></p>
+</li>
+<li><p>乐观锁</p>
+<p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/redis/05_redis%E4%BA%8B%E5%8A%A1-9.png" alt="05_redis事务-9"></p>
+</li>
+<li><p>CAS</p>
+</li>
+</ul>
+<ol>
+<li><p>初始化信用卡可用余额和欠额</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set balance 100</span><br><span class="line">set debt 0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>无加塞篡改，先监控再开启multi，保证两笔金额变动在同一个事务内。</p>
+<p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/redis/05_redis%E4%BA%8B%E5%8A%A1-10.png" alt="05_redis事务-10"></p>
+</li>
+<li><p>有加塞篡改</p>
+<p>一处watch balance，另一处进行set balance 800操作，然后第一处又执行MULTI，开始事务，最后失败。</p>
+<p>监控了key，如果key被修改了，后面一个事务的执行失效。</p>
+<p>watch：监视一个或多个key，如果事务执行之前，这些key被改动，事务将被打断。</p>
+</li>
+<li><p>unwatch</p>
+<p>取消watch命令对所有key的监视。</p>
+</li>
+<li><p><strong>一旦执行了exec，之前加的监控锁都会被取消掉</strong></p>
+</li>
+<li><p>小结</p>
+<ul>
+<li>watch命令，类似乐观锁，事务提交的时候，如果key的值已经<strong>被别的客户端改变</strong>，比如某个list已经被别的客户端push/pop过了，整个事务队列都不会被执行。</li>
+<li>通过watch命令在事务执行之前监控了多个key，倘若在watch之后有任何key的值发生了变化，exec命令执行的事务都将被放弃，同时返回Nullmulti-bulk应答以通知调用者事务执行失败。</li>
+</ul>
+</li>
+</ol>
+<h2 id="3阶段"><a href="#3阶段" class="headerlink" title="3阶段"></a>3阶段</h2><ul>
+<li>开启：以MULTI开始一个事务。</li>
+<li>入队：将多个命令入队到事务中，接到这些命令并不会立即执行，而是放到等待执行的事务队列里面。</li>
+<li>执行：由EXEC命令触发事务。</li>
+</ul>
+<h2 id="3特性"><a href="#3特性" class="headerlink" title="3特性"></a>3特性</h2><p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/redis/05_redis%E4%BA%8B%E5%8A%A1-11.png" alt="05_redis事务-11"></p>
+<ul>
+<li>单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发来的命令请求所打断。</li>
+<li>没有隔离级别的概念：队列中的命令没有提交之前都不会实际的被执行，因为事务提交前任何指令都不会被实际执行。也就不存在“事务内的查询要看到事务里的更新，在事务处查询不能看到”，这个让人万分头痛的问题。</li>
+<li>不保证原子性：redis同一个事务中如果有一条命令执行失败，其后的命令仍然会被执行，没有回滚。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/08/07/MyBatis/03_MyBatis_HelloWorld/" rel="next" title="03_Mybatis_HelloWorld">
+                  <i class="fa fa-chevron-left"></i> 03_Mybatis_HelloWorld
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/08/08/Redis/06_Redis_%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85/" rel="prev" title="06_Redis_发布订阅">
+                  06_Redis_发布订阅 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#05-Reids-事务"><span class="nav-number">1.</span> <span class="nav-text">05_Reids_事务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis事务是什么"><span class="nav-number">1.1.</span> <span class="nav-text">Redis事务是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis事务能干嘛"><span class="nav-number">1.2.</span> <span class="nav-text">Redis事务能干嘛</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么用Redis事务"><span class="nav-number">1.3.</span> <span class="nav-text">怎么用Redis事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常用命令"><span class="nav-number">1.3.1.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正常执行"><span class="nav-number">1.3.2.</span> <span class="nav-text">正常执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#放弃事务"><span class="nav-number">1.3.3.</span> <span class="nav-text">放弃事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全体连坐"><span class="nav-number">1.3.4.</span> <span class="nav-text">全体连坐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#冤头债主"><span class="nav-number">1.3.5.</span> <span class="nav-text">冤头债主</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#watch监控"><span class="nav-number">1.3.6.</span> <span class="nav-text">watch监控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#悲观锁-乐观锁-CAS-Check-And-Set"><span class="nav-number">1.3.6.1.</span> <span class="nav-text">悲观锁/乐观锁/CAS(Check And Set)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3阶段"><span class="nav-number">1.4.</span> <span class="nav-text">3阶段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3特性"><span class="nav-number">1.5.</span> <span class="nav-text">3特性</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="tomxwd"
+      src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+  <p class="site-author-name" itemprop="name">tomxwd</p>
+  <div class="site-description" itemprop="description">tomxwd</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">435</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/tomxwd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;tomxwd" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+  <div class="beian"><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备18158552号-1 </a>
+      <img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/%E5%A4%87%E6%A1%88%E5%9B%BE%E6%A0%87.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18158552" rel="noopener" target="_blank">1213123 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-bug"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

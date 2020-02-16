@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-128x128.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-32x32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/girl-16x16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="tomxwd.blog" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="14_Netty_Netty核心模块组件Bootstrap、ServerBootstrap Bootstrap意思是引导，一个Netty应用通常由一个Bootstrap开始，主要作用是配置整个Netty程序，串联各个组件，Netty中Bootstrap类是客户端程序的启动引导类，ServerBootstrap是服务端启动引导类； 常见的方法： public ServerBootstrap grou">
+<meta name="keywords" content="Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="14_Netty_Netty核心模块组件">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;12&#x2F;15&#x2F;Netty&#x2F;14_Netty_Netty%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97%E7%BB%84%E4%BB%B6&#x2F;index.html">
+<meta property="og:site_name" content="tomxwd.blog">
+<meta property="og:description" content="14_Netty_Netty核心模块组件Bootstrap、ServerBootstrap Bootstrap意思是引导，一个Netty应用通常由一个Bootstrap开始，主要作用是配置整个Netty程序，串联各个组件，Netty中Bootstrap类是客户端程序的启动引导类，ServerBootstrap是服务端启动引导类； 常见的方法： public ServerBootstrap grou">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;Netty&#x2F;14ChannelHandler%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0%E7%B1%BB%E4%B8%80%E8%A7%88%E5%9B%BE.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;Netty&#x2F;14channel%E4%B8%8EChannelPipeline%E4%BB%A5%E5%8F%8AChannelHandler%E5%85%B3%E7%B3%BB.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;Netty&#x2F;14EventLoopGroup.png">
+<meta property="og:updated_time" content="2019-12-17T13:17:11.512Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;tomxwd&#x2F;ImageHosting&#x2F;master&#x2F;blog&#x2F;Netty&#x2F;14ChannelHandler%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0%E7%B1%BB%E4%B8%80%E8%A7%88%E5%9B%BE.png">
+
+<link rel="canonical" href="http://www.blog.tomxwd.com/2019/12/15/Netty/14_Netty_Netty%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97%E7%BB%84%E4%BB%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>14_Netty_Netty核心模块组件 | tomxwd.blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">tomxwd.blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/tomxwd" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.blog.tomxwd.com/2019/12/15/Netty/14_Netty_Netty%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97%E7%BB%84%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+      <meta itemprop="name" content="tomxwd">
+      <meta itemprop="description" content="tomxwd">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="tomxwd.blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          14_Netty_Netty核心模块组件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-15 14:07:05" itemprop="dateCreated datePublished" datetime="2019-12-15T14:07:05+08:00">2019-12-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-17 21:17:11" itemprop="dateModified" datetime="2019-12-17T21:17:11+08:00">2019-12-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Netty/" itemprop="url" rel="index">
+                    <span itemprop="name">Netty</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="14-Netty-Netty核心模块组件"><a href="#14-Netty-Netty核心模块组件" class="headerlink" title="14_Netty_Netty核心模块组件"></a>14_Netty_Netty核心模块组件</h1><h2 id="Bootstrap、ServerBootstrap"><a href="#Bootstrap、ServerBootstrap" class="headerlink" title="Bootstrap、ServerBootstrap"></a>Bootstrap、ServerBootstrap</h2><ol>
+<li>Bootstrap意思是引导，一个Netty应用通常由一个Bootstrap开始，主要作用是配置整个Netty程序，串联各个组件，Netty中Bootstrap类是客户端程序的启动引导类，ServerBootstrap是服务端启动引导类；</li>
+<li>常见的方法：<ul>
+<li>public ServerBootstrap <strong>group</strong>(EventLoopGroup parentGroup, EventLoopGroup childGroup)，该方法用于服务器端，用来设置两个EventLoop；</li>
+<li>public B <strong>group</strong>(EventLoopGroup group)，该方法用于客户端，用来设置一个EventLoopGroup；</li>
+<li>public B <strong>channel</strong>(Class&lt;? extends C&gt; channelClass)，该方法用来设置一个服务器端的通道实现；</li>
+<li>public &lt;T&gt; B <strong>option</strong>(ChannelOption&lt;T&gt; option, T value)，用来给ServerChannel添加配置；</li>
+<li>public &lt;T&gt; ServerBootstrap <strong>childOption</strong>(ChannelOption &lt;T&gt; childOption,T value)，用来给接收到的通道添加配置；</li>
+<li>public ServerBootstrap <strong>childHandler</strong>(ChannelHandler childHandler)，该方法用来设置业务处理类（自定义handler）；<ul>
+<li>这里注意，如果是handler，则是给parentGroup，也就是BossGroup添加处理类</li>
+</ul>
+</li>
+<li>public ChannelFuture bind(int inetPort)，该方法用于服务器端，用来设置占用的端口号；</li>
+<li>public ChannelFuture connect(String inetHost, int InetPort)，该方法用于客户端，用来连接服务器端；</li>
+</ul>
+</li>
+</ol>
+<h2 id="Future、ChannelFuture"><a href="#Future、ChannelFuture" class="headerlink" title="Future、ChannelFuture"></a>Future、ChannelFuture</h2><ol>
+<li>Netty中所有的IO操作都是异步的，不能立刻得知消息是否被正确处理，但是可以过一会等它执行完成或直接注册一个监听，具体的实现就是通过Future和ChannelFuture，他们可以注册一个监听，当操作执行成功或失败的时候监听会自动触发注册的监听事件；</li>
+<li>常见的方法：<ul>
+<li>Channel channel()，返回当前正在进行IO操作的通道；</li>
+<li>ChannelFuture sync()，等待异步操作执行完毕；</li>
+</ul>
+</li>
+</ol>
+<h2 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h2><ol>
+<li><p>Netty网络通信的组件，能够用于执行网络I/O操作；</p>
+</li>
+<li><p>通过Channel可以获得当前网络连接的通道的状态；</p>
+</li>
+<li><p>通过Channel可以获得当前网络连接的配置参数（例如接收缓冲区的大小）；</p>
+</li>
+<li><p>Channel提供异步的网络I/O操作（如建立连接、读写、绑定端口），异步调用意味着任何I/O调用都将立即返回，并且不保证在调用结束时所请求的I/O操作已完成；</p>
+</li>
+<li><p>调用立即返回一个ChannelFuture实例，通过注册监听器到ChannelFuture上，可以I/O操作成功、失败或取消时回调通知调用方；</p>
+</li>
+<li><p>支持关联I/O操作与对应的处理程序；</p>
+</li>
+<li><p>不同协议、不同的阻塞类型的连接都有不同的Channel类型与之对应，常用的Channel类型：</p>
+<ul>
+<li><strong>NioSocketChannel：</strong>异步的客户端TCP Socket连接；</li>
+<li><strong>NioServerSocketChannel：</strong>异步的服务器端TCP Socket连接；</li>
+<li><strong>NioDatagramChannel：</strong>异步的UDP连接；</li>
+<li><strong>NioSctpChannel：</strong>异步的客户端Sctp连接；</li>
+<li><strong>NioSctpServerChannel：</strong>异步的服务器端Sctp连接；</li>
+</ul>
+<p>这些通道涵盖了UDP和TCP网络IO以及文件IO；</p>
+</li>
+</ol>
+<h2 id="Selector"><a href="#Selector" class="headerlink" title="Selector"></a>Selector</h2><ol>
+<li>Netty基于Selector对象实现I/O多路复用，通过Selector一个线程可以监听多个连接的Channel事件；</li>
+<li>当向一个Selector中注册Channel后，Selector内部的机制就可以自动不断地查询（Select）这些注册的Channel是否有已就绪的I/O事件（例如可读、可写、网络连接完成等），这样程序就可以很简单的使用一个线程高效地管理多个Channel；</li>
+</ol>
+<h2 id="ChannelHandler及其实现类"><a href="#ChannelHandler及其实现类" class="headerlink" title="ChannelHandler及其实现类"></a>ChannelHandler及其实现类</h2><ol>
+<li><p>ChannelHandler是一个接口，处理I/O事件或拦截I/O操作，并将其转发到其ChannelPipeline（业务处理链）中的下一个处理程序；</p>
+</li>
+<li><p>ChannelHandler本身并没有提供很多方法，因为这个接口有许多的方法需要实现，使用期间，可以继承它的子类；</p>
+</li>
+<li><p>ChannelHandler及其实现类一览图：</p>
+<p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/Netty/14ChannelHandler%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0%E7%B1%BB%E4%B8%80%E8%A7%88%E5%9B%BE.png" alt="ChannelHandler及其实现类一览图"></p>
+<ul>
+<li>ChannelInboundHandler用于处理入站I/O事件；</li>
+<li>ChannelOutboundHandler用于处理出站I/O操作；</li>
+</ul>
+<p>适配器：</p>
+<ul>
+<li>ChannelInboundHandlerAdapter用于处理入站I/O事件；</li>
+<li>ChanneloutboundHandlerAdapter用于处理出站I/O操作；</li>
+<li>ChannelDuplexHandler用于处理入站和出站事件；</li>
+</ul>
+</li>
+<li><p>我们经常需要自定义一个Handler类去继承ChannelInboundHandlerAdapter，然后通过重写相应方法实现业务逻辑，一般重写以下方法：</p>
+<ul>
+<li><p>channelRegistered：通道注册事件</p>
+</li>
+<li><p>channelActive：通道就绪事件</p>
+</li>
+<li><p>channelRead：通道读取数据事件</p>
+</li>
+<li><p>channelReadComplete：数据读取完毕事件</p>
+</li>
+<li><p>exceptionCaught：通道发生异常事件</p>
+</li>
+<li><p>handlerAdded：加入了新的处理器</p>
+</li>
+<li><p>handlerRemoved：移除了处理器</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="Pipeline和ChannelPipeline"><a href="#Pipeline和ChannelPipeline" class="headerlink" title="Pipeline和ChannelPipeline"></a>Pipeline和ChannelPipeline</h2><p>ChannelPipeline是一个重点：</p>
+<ol>
+<li><p>ChannelPipeline是一个Handler的集合，它负责处理和拦截inbound或者outbound的事件和操作，相当于一个贯穿Netty的链。<strong>（也可以这样理解：ChannelPipeline是保存ChannelHandler的List，用于处理或者拦截Channel的入站事件和出站操作）</strong></p>
+</li>
+<li><p>ChannelPipeline实现了一种高级形式的拦截过滤器模式，使用户可以完全控制事件的处理方式，以及Channel中各个的ChannelHandler如何相互交互；</p>
+</li>
+<li><p>在Netty中每个Channel都有且仅有一个ChannelPipeline与之对应，它们的组成关系如下：</p>
+<p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/Netty/14channel%E4%B8%8EChannelPipeline%E4%BB%A5%E5%8F%8AChannelHandler%E5%85%B3%E7%B3%BB.png" alt="channel与ChannelPipeline以及ChannelHandler关系"></p>
+<ul>
+<li>一个Channel包含了一个ChannelPipeline，而ChannelPipeline中又维护了一个由ChannelHandlerContext组成的双向链表，并且每个ChannelHandlerContext中又关联着一个ChannelHandler。</li>
+<li>入站事件和出站事件在一个双向链表中，入站事件会从链表head往后传递到最后一个入站的handler。出站事件会从链表tail往前传递到最前一个出站的handler，两种类型的handler互不干扰；<ul>
+<li>这也就说明了为什么Server到Client是从head到tail，而Client是tail到head，Server到Client是入站，Client到Server是出站；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>常用方法：</p>
+<ul>
+<li>ChannelPipeline addFirst(ChannelHandler…handlers)：把一个业务处理类（handler）添加到链表中的第一个位置；</li>
+<li>ChannelPipeline addLast(ChannelHandler…handlers)：把一个业务处理类（handler）添加到链表中的最后一个位置；</li>
+</ul>
+</li>
+</ol>
+<h2 id="ChannelHandlerContext"><a href="#ChannelHandlerContext" class="headerlink" title="ChannelHandlerContext"></a>ChannelHandlerContext</h2><ol>
+<li>保存Channel相关的所有上下文信息，同时关联一个ChannelHandler对象；</li>
+<li>即ChannelHandlerContext中包含一个具体的事件处理器ChannelHandler，同时ChannelHandlerContext中也绑定了对应的pipeline以及Channel信息，方便对ChannelHandler进行调用；</li>
+<li>常用方法：<ul>
+<li>ChannelFuture close()：关闭通道</li>
+<li>ChannelOutboundInvoker flush()：刷新</li>
+<li>ChannelFuture writeAndFlush(Object msg)：将数据写入到ChannelPipeline中，当前ChannelHandler的下一个ChannelHandler开始处理（出站）</li>
+</ul>
+</li>
+</ol>
+<h2 id="ChannelOption"><a href="#ChannelOption" class="headerlink" title="ChannelOption"></a>ChannelOption</h2><ol>
+<li><p>Netty在创建Channel实例后，一般都需要设置ChannelOption参数</p>
+</li>
+<li><p>ChannelOption参数如下：</p>
+<ul>
+<li><p><strong>ChannelOption.So_BACKLOG</strong></p>
+<p>对应TCP/IP协议listen函数中的backlog参数，用来初始化服务器可连接队列大小。</p>
+<p>服务端处理客户端请求是顺序处理的，所以同一时间只能处理一个客户端连接。</p>
+<p>多个客户端来的时候，服务端将不能处理的客户端连接请求放在队列中等待处理，backlog参数指定了队列的大小；</p>
+</li>
+<li><p><strong>ChannelOption.SO_KEEPALIVE</strong></p>
+<p>一直保持连接活动状态；</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="EventLoopGroup和其实现类NioEventLoopGroup"><a href="#EventLoopGroup和其实现类NioEventLoopGroup" class="headerlink" title="EventLoopGroup和其实现类NioEventLoopGroup"></a>EventLoopGroup和其实现类NioEventLoopGroup</h2><ol>
+<li><p>EventLoopGroup是一组EventLoop的抽象，Netty为了更好的利用多核CPU资源，一般会有多个EventLoop同时工作，每个EventLoop维护着一个Selector实例；</p>
+</li>
+<li><p>EventLoopGroup提供next接口，可以从组里按照一定规则获取其中一个EventLoop来处理任务。【在Netty服务器编程中，我们一般需要提供两个EventLoopGroup，例如：BossEventLoopGroup和WorkEventLoopGroup。</p>
+</li>
+<li><p>通常一个服务端口即一个ServerSocketChannel对应一个Selector和一个EventLoop线程。BossEventLoop负责接收客户端的连接并将SocketChannel交给WorkerEventLoopGroup来进行IO处理；</p>
+<p><img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/blog/Netty/14EventLoopGroup.png" alt="EventLoopGroup"></p>
+<ul>
+<li>BossEventLoopGroup通常是一个单线程的EventLoop，EventLoop维护着一个注册了ServerSocketChannel的Selector实例，BossEventLoop不断轮询Selector，将连接事件分离出来；通常是OP_ACCEPT事件，然后将接收到的SocketChannel交给WorkerEventLoopGroup；</li>
+<li>WorkerEventLoopGroup会由next选择其中一个EventLoop来将这个SocketChannel注册到其维护的Selector并对其后续的IO事件进行处理；</li>
+</ul>
+</li>
+<li><p>常用方法：</p>
+<ul>
+<li>public NioEventLoopGroup()：构造方法</li>
+<li>public Future&lt;?&gt; shutdownGracefully()：断开连接，关闭线程</li>
+</ul>
+</li>
+</ol>
+<h2 id="Unpooled类"><a href="#Unpooled类" class="headerlink" title="Unpooled类"></a>Unpooled类</h2><ol>
+<li><p>Netty提供了一个专门用来操作缓冲区（即Netty的数据容器）的工具类；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+-------------------+------------------+------------------+</span><br><span class="line">| discardable bytes |  readable bytes  |  writable bytes  |</span><br><span class="line">|                   |     (CONTENT)    |                  |</span><br><span class="line">+-------------------+------------------+------------------+</span><br><span class="line">|                   |                  |                  |</span><br><span class="line"><span class="number">0</span>      &lt;=      readerIndex   &lt;=   writerIndex    &lt;=    capacity</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>常用方法如下：</p>
+<ul>
+<li>public static ByteBuf copiedBuffer(CharSequence string,Charset charset)：通过给定的数据和字符编码返回一个ByteBuf对象（类似于NIO中的ByteBuffer但有区别）</li>
+</ul>
+</li>
+<li><p>举例说明Unpooled获取Netty的数据容器ByteBuf的基本使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyByteBuf01</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 创建一个ByteBuf</span></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 1. 创建一个对象，该对象包含一个数组arr，是一个byte[10]</span></span><br><span class="line"><span class="comment">         * 2. 在netty的Buffer中，不需要使用flip进行反转就可以读取</span></span><br><span class="line"><span class="comment">         *      因为底层维护了readerIndex以及writerIndex</span></span><br><span class="line"><span class="comment">         * 3. 通过readerIndex writerIndex capactiy将buffer分为三部分</span></span><br><span class="line"><span class="comment">         *                0====readerIndex    已经读取的区域</span></span><br><span class="line"><span class="comment">         *      readerIndex====writerIndex    可读区域</span></span><br><span class="line"><span class="comment">         *      writerIndex====capacity       可写区域</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        ByteBuf buffer = Unpooled.buffer(<span class="number">10</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            buffer.writeByte(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 总容量</span></span><br><span class="line">        System.out.println(<span class="string">"buffer.capacity() = "</span> + buffer.capacity());</span><br><span class="line">        <span class="comment">// 输出</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; buffer.capacity(); i++) &#123;</span><br><span class="line">            <span class="comment">// 这里用的是随机读取，因此readIndex不会变化</span></span><br><span class="line">            System.out.println(<span class="string">"buffer.getByte(i) = "</span> + buffer.getByte(i));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; buffer.capacity(); i++) &#123;</span><br><span class="line">            <span class="comment">// 这里readByte才会导致readIndex增加</span></span><br><span class="line">            System.out.println(<span class="string">"buffer.readByte() = "</span> + buffer.readByte());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyByteBuf02</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 创建ByteBuf</span></span><br><span class="line">        ByteBuf byteBuf = Unpooled.copiedBuffer(<span class="string">"hello,北京"</span>, CharsetUtil.UTF_8);</span><br><span class="line">        <span class="comment">// 使用相关的API</span></span><br><span class="line">        <span class="keyword">if</span>(byteBuf.hasArray())&#123;<span class="comment">//true</span></span><br><span class="line">            <span class="keyword">byte</span>[] content = byteBuf.array();</span><br><span class="line">            <span class="comment">// 将content转为字符串</span></span><br><span class="line">            System.out.println(<span class="string">"new String(content,CharsetUtil.UTF_8) = "</span> + <span class="keyword">new</span> String(content, CharsetUtil.UTF_8));</span><br><span class="line">            System.out.println(<span class="string">"byteBuf = "</span> + byteBuf);</span><br><span class="line">            <span class="comment">// 数组偏移量</span></span><br><span class="line">            System.out.println(<span class="string">"byteBuf.arrayOffset() = "</span> + byteBuf.arrayOffset());</span><br><span class="line">            System.out.println(<span class="string">"byteBuf.readerIndex() = "</span> + byteBuf.readerIndex());</span><br><span class="line">            System.out.println(<span class="string">"byteBuf.writerIndex() = "</span> + byteBuf.writerIndex());</span><br><span class="line">            System.out.println(<span class="string">"byteBuf.capacity() = "</span> + byteBuf.capacity());</span><br><span class="line">            <span class="comment">// 读取一个字节 getByte不会影响readerIndex，所以用readByte</span></span><br><span class="line">            byteBuf.readByte();</span><br><span class="line">            <span class="comment">// 可读取的字节数量</span></span><br><span class="line">            System.out.println(<span class="string">"byteBuf.readableBytes() = "</span> + byteBuf.readableBytes());</span><br><span class="line">            <span class="comment">// 使用for取出各个字节</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; byteBuf.readableBytes(); i++) &#123;</span><br><span class="line">                System.out.println((<span class="keyword">char</span>)byteBuf.getByte(i));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 指定开始位置以及读取长度 读取</span></span><br><span class="line">            System.out.println(<span class="string">"byteBuf.getCharSequence(1,4, Charset.forName(\"utf-8\")) = "</span> + byteBuf.getCharSequence(<span class="number">1</span>, <span class="number">4</span>, Charset.forName(<span class="string">"utf-8"</span>)));</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Netty/" rel="tag"># Netty</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/12/15/Netty/15_Netty_Netty%E7%BE%A4%E8%81%8A%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="next" title="15_Netty_Netty群聊系统服务器">
+                  <i class="fa fa-chevron-left"></i> 15_Netty_Netty群聊系统服务器
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/12/15/Java%E5%9F%BA%E7%A1%80/Java%E5%9F%BA%E7%A1%80_%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="prev" title="Java基础_网络编程">
+                  Java基础_网络编程 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#14-Netty-Netty核心模块组件"><span class="nav-number">1.</span> <span class="nav-text">14_Netty_Netty核心模块组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bootstrap、ServerBootstrap"><span class="nav-number">1.1.</span> <span class="nav-text">Bootstrap、ServerBootstrap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Future、ChannelFuture"><span class="nav-number">1.2.</span> <span class="nav-text">Future、ChannelFuture</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Channel"><span class="nav-number">1.3.</span> <span class="nav-text">Channel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selector"><span class="nav-number">1.4.</span> <span class="nav-text">Selector</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ChannelHandler及其实现类"><span class="nav-number">1.5.</span> <span class="nav-text">ChannelHandler及其实现类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pipeline和ChannelPipeline"><span class="nav-number">1.6.</span> <span class="nav-text">Pipeline和ChannelPipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ChannelHandlerContext"><span class="nav-number">1.7.</span> <span class="nav-text">ChannelHandlerContext</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ChannelOption"><span class="nav-number">1.8.</span> <span class="nav-text">ChannelOption</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EventLoopGroup和其实现类NioEventLoopGroup"><span class="nav-number">1.9.</span> <span class="nav-text">EventLoopGroup和其实现类NioEventLoopGroup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unpooled类"><span class="nav-number">1.10.</span> <span class="nav-text">Unpooled类</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="tomxwd"
+      src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/blog_headImg/%E9%B1%BC%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+  <p class="site-author-name" itemprop="name">tomxwd</p>
+  <div class="site-description" itemprop="description">tomxwd</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">435</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">54</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/tomxwd" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;tomxwd" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+  <div class="beian"><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">粤ICP备18158552号-1 </a>
+      <img src="https://raw.githubusercontent.com/tomxwd/ImageHosting/master/resource/ico/%E5%A4%87%E6%A1%88%E5%9B%BE%E6%A0%87.png" style="display: inline-block;"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=18158552" rel="noopener" target="_blank">1213123 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-bug"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tomxwd</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
