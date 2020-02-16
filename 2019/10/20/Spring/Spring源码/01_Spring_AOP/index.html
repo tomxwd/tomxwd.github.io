@@ -54,10 +54,11 @@
 <meta property="og:site_name" content="tomxwd.blog">
 <meta property="og:description" content="01_Spring_AOP与OOP（Object Oriented Programming面向对象）相比，传统的OOP开发中的代码逻辑是自上向下的，而在这些自上而下的过程中产生横切性的问题，而这些横切性的问题又与我们的业务逻辑关系不大，会散落在代码的各个地方，造成难以维护。 AOP的编程思想是把这些横切性的问题和主业务逻辑进行分离，从而起到解耦的目的。 使用首先导入织入包： 1234&amp;lt;dep">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;20&#x2F;Spring&#x2F;Spring%E6%BA%90%E7%A0%81&#x2F;01_Spring_AOP&#x2F;1571550660947.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;20&#x2F;Spring&#x2F;Spring%E6%BA%90%E7%A0%81&#x2F;01_Spring_AOP&#x2F;01_Spring_AOP&#x2F;1571550660947.png">
-<meta property="og:updated_time" content="2019-11-16T09:59:16.392Z">
+<meta property="og:updated_time" content="2020-02-16T05:12:07.645Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;20&#x2F;Spring&#x2F;Spring%E6%BA%90%E7%A0%81&#x2F;01_Spring_AOP&#x2F;01_Spring_AOP&#x2F;1571550660947.png">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;www.blog.tomxwd.com&#x2F;2019&#x2F;10&#x2F;20&#x2F;Spring&#x2F;Spring%E6%BA%90%E7%A0%81&#x2F;01_Spring_AOP&#x2F;1571550660947.png">
 
 <link rel="canonical" href="http://www.blog.tomxwd.com/2019/10/20/Spring/Spring%E6%BA%90%E7%A0%81/01_Spring_AOP/">
 
@@ -220,7 +221,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-11-16 17:59:16" itemprop="dateModified" datetime="2019-11-16T17:59:16+08:00">2019-11-16</time>
+                <time title="修改时间：2020-02-16 13:12:07" itemprop="dateModified" datetime="2020-02-16T13:12:07+08:00">2020-02-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -258,6 +259,8 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.aspectj<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>aspectjweaver<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>用<code>@EnableAspectJAutoProxy</code>或者<code>&lt;aop:aspectj-autoproxy/&gt;</code>开启。</p>
+<img src="/2019/10/20/Spring/Spring%E6%BA%90%E7%A0%81/01_Spring_AOP/1571550660947.png" class="" title="[图片描述]">
+
 <p><img src="01_Spring_AOP/1571550660947.png" alt="1571550660947"></p>
 <p>编写一个切面组件：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> xieweidu</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@createDate</span> 2019-10-20 13:51</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAspect</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Pointcut</span>(<span class="string">"execution(* top.tomxwd.controller.*.*(..))"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">pointcut</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Around</span>(<span class="string">"top.tomxwd.config.aop.MyAspect.pointcut()"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">around</span><span class="params">(ProceedingJoinPoint pjp)</span></span>&#123;</span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">        Object proceed = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            proceed = pjp.proceed();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable throwable) &#123;</span><br><span class="line">            throwable.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">        log.info(<span class="string">"执行时间为&#123;&#125;"</span>,end-start);</span><br><span class="line">        <span class="keyword">return</span> proceed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Before</span>(<span class="string">"top.tomxwd.config.aop.MyAspect.pointcut()"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"-------------------before-------------------"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@After</span>(<span class="string">"top.tomxwd.config.aop.MyAspect.pointcut()"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"-------------------after--------------------"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -287,9 +290,6 @@
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/10/16/Hadoop/07_Hadoop_%E7%BC%96%E8%AF%91%E6%BA%90%E7%A0%81/" rel="next" title="07_Hadoop_编译源码">
-                  <i class="fa fa-chevron-left"></i> 07_Hadoop_编译源码
-                </a>
             </div>
 
             <span class="post-nav-divider"></span>
@@ -352,20 +352,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">342</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -402,8 +402,8 @@
 
 <div class="copyright">
   
-  &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-bug"></i>
   </span>
